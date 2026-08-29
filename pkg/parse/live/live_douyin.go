@@ -158,7 +158,7 @@ func NewDouyin(http *request.Http) *Douyin {
 }
 
 func (d *Douyin) GetRoomWebUri(roomId string) string {
-	return ""
+	return "https://www.douyin.com/user/" + roomId
 }
 
 func (d *Douyin) GetInfo(roomId, ttwid string) (*RoomInfo, error) {
@@ -176,7 +176,6 @@ func (d *Douyin) GetInfo(roomId, ttwid string) (*RoomInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	var result DouyinUserResponse[DouyinUserInfo]
 
 	if err := json.Unmarshal(resp.Bytes(), &result); err != nil {

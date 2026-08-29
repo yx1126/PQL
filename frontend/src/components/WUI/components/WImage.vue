@@ -29,6 +29,9 @@ const {
 
 <style lang="scss" scoped>
 .w-image {
+    &:not(.is-back) {
+        object-fit: cover;
+    }
     @include when(back) {
         display: inline-flex;
         background-image: var(--w-image-path);
