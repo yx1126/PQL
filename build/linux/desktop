@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=My Product
+Comment=A PQL application
+# The Exec line includes %u to pass the URL to the application
+Exec=/usr/local/bin/pql.exe %u
+Terminal=false
+Type=Application
+Icon=pql.exe
+Categories=Utility;
+StartupWMClass=pql.exe
+
+ 

@@ -1,0 +1,76 @@
+<script setup lang="ts">
+import { Clipboard } from "@wailsio/runtime";
+import type { ParseOption } from "@/utils/parse";
+
+defineOptions({
+    name: "VideoButtons",
+});
+
+const {
+    type,
+} = defineProps<{
+    type?: string;
+}>();
+
+const emit = defineEmits<{
+    import: [data: ParseOption[]];
+}>();
+
+const ImportDialog = defineAsyncComponent(() => import("@/components/Parser"));
+
+const importDialogRef = useTemplateRef("importDialogRef");
+
+const message = useMessage();
+const msgbox = useMessageBox();
+const router = useRouter();
+const store = useParserStore();
+
+function onSourceClick() {
+    router.push(`/sub/source?type=${type}`);
+}
+
+function onSuccess(data: ParseOption[]) {
+    emit("import", data);
+}
+
+function onExport() {
+    msgbox.confirm(`确认要导出 "json" 到剪切板吗？`).then(() => {
+        let str = "";
+        if(type === "video") {
+            str = store.videoSource?.source || "";
+        } else if(type === "anime") {
+            str = store.animeSource?.source || "";
+        }
+        if(str) {
+            Clipboard.SetText(str);
+            message.success("导出成功！");
+        }
+    });
+}
+</script>
+
+<template>
+    <div class="video-btns">
+        <el-button type="primary" icon="source-manage" title="源" @click="onSourceClick" />
+        <el-button type="primary" icon="source-import" title="导入" @click="importDialogRef?.open()" />
+        <el-button type="primary" icon="source-export" title="导出" @click="onExport" />
+    </div>
+    <import-dialog ref="importDialogRef" @success="onSuccess" />
+</template>
+
+<style lang="scss" scoped>
+.video-btns {
+    min-height: 40px;
+    display: flex;
+    gap: 8px;
+    .el-button {
+        height: 35px;
+        --el-border-radius-base: var(--w-border-radius);
+        flex: 1;
+        --el-font-size-base: 22px;
+        & + .el-button {
+            margin: 0;
+        }
+    }
+}
+</style>

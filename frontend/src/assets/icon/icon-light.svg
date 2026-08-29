@@ -1,0 +1,50 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with rounded corners -->
+  <rect width="512" height="512" rx="64" fill="#0a0a0f"/>
+
+  <!-- Outer Frame with rounded corners -->
+  <rect x="32" y="32" width="448" height="448" rx="32" stroke="#ff9f43" stroke-width="4" fill="none"/>
+
+  <!-- Corner Accents -->
+  <path d="M64 32 Q32 32 32 64 L32 80" stroke="#ff9f43" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <path d="M448 32 Q480 32 480 64 L480 80" stroke="#ff9f43" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <path d="M64 480 Q32 480 32 448 L32 432" stroke="#ff9f43" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <path d="M448 480 Q480 480 480 448 L480 432" stroke="#ff9f43" stroke-width="8" stroke-linecap="round" fill="none"/>
+
+  <!-- Inner Glow -->
+  <rect x="64" y="64" width="384" height="384" rx="24" fill="url(#glow)" opacity="0.15"/>
+
+  <!-- Lightning Bolt (Power Symbol) -->
+  <path d="M256 120 L200 256 L256 256 L200 392 L320 256 L256 256 L320 120 Z"
+        fill="#ff9f43"
+        stroke="#d4a574"
+        stroke-width="3"
+        stroke-linejoin="round"/>
+
+  <!-- Tech Lines -->
+  <line x1="120" y1="180" x2="180" y2="180" stroke="#ff9f43" stroke-width="2" opacity="0.6" stroke-linecap="round"/>
+  <line x1="332" y1="180" x2="392" y2="180" stroke="#ff9f43" stroke-width="2" opacity="0.6" stroke-linecap="round"/>
+  <line x1="120" y1="332" x2="180" y2="332" stroke="#ff9f43" stroke-width="2" opacity="0.6" stroke-linecap="round"/>
+  <line x1="332" y1="332" x2="392" y2="332" stroke="#ff9f43" stroke-width="2" opacity="0.6" stroke-linecap="round"/>
+
+  <!-- Circuit Pattern -->
+  <circle cx="120" cy="180" r="4" fill="#ff9f43"/>
+  <circle cx="392" cy="180" r="4" fill="#ff9f43"/>
+  <circle cx="120" cy="332" r="4" fill="#ff9f43"/>
+  <circle cx="392" cy="332" r="4" fill="#ff9f43"/>
+
+  <!-- Scanline Effect -->
+  <rect width="512" height="512" rx="64" fill="url(#scanlines)" opacity="0.1"/>
+
+  <!-- Gradient Definitions -->
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%">
+      <stop offset="0%" style="stop-color:#ff9f43;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff9f43;stop-opacity:0" />
+    </radialGradient>
+
+    <pattern id="scanlines" x="0" y="0" width="512" height="4" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="512" y2="0" stroke="#ff9f43" stroke-width="1"/>
+    </pattern>
+  </defs>
+</svg>

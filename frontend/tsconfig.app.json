@@ -1,0 +1,32 @@
+{
+    "extends": "@vue/tsconfig/tsconfig.dom.json",
+    "compilerOptions": {
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
+        "paths": {
+            "@/*": ["./src/*"],
+            "@bind/*": ["./bindings/pql/pkg/*"],
+            "#/*": ["./types/*"]
+        },
+        "types": [
+            "element-plus/global",
+            "@intlify/unplugin-vue-i18n/messages",
+            "./scripts/build-icons/client.d.ts"
+        ],
+        "erasableSyntaxOnly": false,
+        "allowJs": true,
+        "checkJs": false,
+        "noFallthroughCasesInSwitch": true,
+        /* Linting */
+        "noUnusedLocals": true,
+        "noUnusedParameters": true
+    },
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.vue",
+        "bindings",
+        "types/**/*.ts",
+        "types/**/*.d.ts"
+    ]
+}

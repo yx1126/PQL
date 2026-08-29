@@ -1,0 +1,123 @@
+@forward "element-plus/theme-chalk/src/common/var.scss" with (
+    $colors: (
+        "primary": (
+            "base": #ff9f43,
+        ),
+        "success": (
+            "base": #18a058,
+        ),
+        "warning": (
+            "base": #f0a020,
+        ),
+        "danger": (
+            "base": #d03050,
+        ),
+        "error": (
+            "base": #f56c6c,
+        ),
+        "info": (
+            "base": #909399,
+        ),
+    ),
+    $border-radius: (
+        "base": var(--w-border-radius),
+    )
+);
+
+@use "element-plus/theme-chalk/src/index.scss" as *;
+@use "element-plus-dark" as *;
+@use "../global/mixins" as m;
+
+.el-divider {
+    --el-border-color: var(--w-border-color);
+    &.el-divider--horizontal {
+        margin: 10px 0;
+    }
+    &.el-divider--vertical {
+        margin: 0;
+    }
+    &__text {
+        width: max-content;
+        padding: 0 12px;
+    }
+}
+
+.el-sub-menu.is-active > .el-sub-menu__title {
+    color: var(--el-menu-active-color);
+}
+
+.el-dropdown,
+.el-dropdown * {
+    outline: none;
+}
+
+.el-drawer {
+    &__header {
+        margin: 0;
+        padding: 16px 24px;
+        border-bottom: 1px solid var(--el-border-color);
+    }
+    &__footer {
+        padding: 16px 24px;
+        border-top: 1px solid var(--el-border-color);
+    }
+}
+
+.el-table thead th.el-table__cell,
+.el-table.is-scrolling-none th.el-table-fixed-column--left,
+.el-table.is-scrolling-none th.el-table-fixed-column--right {
+    background: var(--el-fill-color-light) !important;
+}
+
+.el-input-number {
+    width: 100%;
+}
+
+.el-table {
+    --el-fill-color-light: var(--w-box-bg);
+    .el-table__cell .cell {
+        height: 100%;
+        line-height: 1;
+    }
+}
+
+.el-link {
+    --el-link-font-size: inherit;
+}
+
+.el-popper.is-light {
+    // background: var(--w-box-bg-dark-2);
+    --el-border-color-light: var(--el-popper-bg-color-light);
+}
+
+.el-segmented {
+    @include m.when(rounded) {
+        --el-border-radius-base: 32px;
+    }
+    &.el-segmented--small {
+        @include m.when(rounded) {
+            --el-border-radius-base: 22px;
+        }
+    }
+}
+
+.el-radio-group {
+    .el-radio__label {
+        display: inline-flex;
+        align-items: center;
+        line-height: 1;
+        gap: 8px;
+    }
+    @include m.when(vertical) {
+        width: 100%;
+        flex-direction: column;
+        gap: var(--w-layout-space);
+        .el-radio {
+            width: 100%;
+            margin-right: 0;
+            @include m.when(checked) {
+                background-color: var(--el-color-primary-light-9);
+            }
+        }
+    }
+}

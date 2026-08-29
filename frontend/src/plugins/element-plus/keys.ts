@@ -1,0 +1,1 @@
+export const DelayKey = Symbol("delay") as InjectionKey<Noable<number>>;

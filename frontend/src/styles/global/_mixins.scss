@@ -1,0 +1,55 @@
+@mixin when-light {
+    @at-root html {
+        @content;
+    }
+}
+
+@mixin when-dark {
+    @at-root html.dark & {
+        @content;
+    }
+}
+
+@mixin when($state) {
+    @at-root {
+        &.is-#{$state} {
+            @content;
+        }
+    }
+}
+
+@mixin when-not($state) {
+    @at-root {
+        &:not(.is-#{$state}) {
+            @content;
+        }
+    }
+}
+
+@mixin when-hover($state) {
+    &:hover {
+        @content;
+    }
+    @include when($state) {
+        @content;
+    }
+}
+
+@mixin hidden-scroll {
+    &::-webkit-scrollbar {
+        display: none; /* Chrome Safari */
+    }
+    scrollbar-width: none; /* firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+}
+
+@mixin no-select {
+    // 禁止文字被鼠标选中
+    moz-user-select: -moz-none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

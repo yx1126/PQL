@@ -1,0 +1,25 @@
+@use "../global/mixins" as m;
+
+.art-video-player.art-fullscreen-web {
+    height: calc(100% - var(--w-header-height)) !important;
+    top: var(--w-header-height) !important;
+}
+
+.art-video-player.art-backdrop > div.art-contextmenus {
+    @include m.when-dark {
+        background-color: var(--w-body-color) !important;
+    }
+}
+
+.art-icon.art-icon-cdns > svg,
+.art-icon.art-icon-qualitys > svg {
+    width: 1em;
+    height: 1em;
+}
+
+.art-icon.art-icon-cdns {
+    font-size: 16px;
+}
+.art-icon.art-icon-qualitys {
+    font-size: 20px;
+}

@@ -1,0 +1,16 @@
+<svg viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with rounded corners -->
+  <rect width="32" height="32" rx="6" fill="#0a0a0f"/>
+
+  <!-- Frame with rounded corners -->
+  <rect x="2" y="2" width="28" height="28" rx="4" stroke="#ff9f43" stroke-width="1.5" fill="none"/>
+
+  <!-- Corner Accents (curved) -->
+  <path d="M6 2 Q2 2 2 6 L2 8" stroke="#ff9f43" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M26 2 Q30 2 30 6 L30 8" stroke="#ff9f43" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M6 30 Q2 30 2 26 L2 24" stroke="#ff9f43" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M26 30 Q30 30 30 26 L30 24" stroke="#ff9f43" stroke-width="2" stroke-linecap="round" fill="none"/>
+
+  <!-- Lightning Symbol -->
+  <path d="M16 6 L11 16 L16 16 L11 26 L21 16 L16 16 L21 6 Z" fill="#ff9f43" stroke-linejoin="round"/>
+</svg>

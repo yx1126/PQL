@@ -1,0 +1,56 @@
+{
+    "input": "Please input {0}",
+    "select": "Please select {0}",
+    "tip": "Tip",
+    "sys-tip": "System Message",
+    "button": {
+        "search": "Search",
+        "reset": "Reset",
+        "add": "Add ",
+        "edit": "Edit ",
+        "delete": "Delete",
+        "deletes": "Batch Delete",
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "submit": "Submit",
+        "save": "Save",
+        "back": "Back",
+        "sure": "Are you sure you want to {0}?",
+        "ExpandCollapse": "Expand/Collapse"
+    },
+    "delete": {
+        "confirm": "Confirm to delete the selected data?",
+        "success": "Deletion successful!"
+    },
+    "valid": {
+        "not-null": "{0} cannot be empty"
+    },
+    "please": {
+        "select-one": "Please select at least one data"
+    },
+    "checked": {
+        "select-all": "Select All"
+    },
+    "status": {
+        "name": "status",
+        "enable": "enable",
+        "disable": "disable"
+    },
+    "visible": {
+        "show": "show",
+        "hide": "hide"
+    },
+    "flag": {
+        "yes": "yes",
+        "no": "no"
+    },
+    "form": {
+    },
+    "index": "index",
+    "remark": "remark",
+    "updatedBy": "updatedBy",
+    "updatedAt": "updatedAt",
+    "createdBy": "createdBy",
+    "createdAt": "createdAt",
+    "operate": "operate"
+}
