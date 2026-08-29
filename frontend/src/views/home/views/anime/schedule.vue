@@ -42,7 +42,7 @@ const segmentedList = [
     { label: "英", value: "en" },
 ];
 
-const state = useStatesStore();
+const state = useLoading();
 const set = useSetStore();
 const { dataList, store, open } = useState("anime");
 

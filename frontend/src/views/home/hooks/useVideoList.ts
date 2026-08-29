@@ -4,7 +4,7 @@ import { useState, type VideoType } from "./useState";
 import type { PagingType } from "@/components/WUI";
 
 export function useVideoList(type: VideoType) {
-    const state = useStatesStore();
+    const state = useLoading();
 
     const {
         typeList,

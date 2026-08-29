@@ -4,7 +4,7 @@ import { useState } from "./useState";
 import type { PagingType } from "@/components/WUI";
 
 export function useVideoSearch(type: "video" | "anime") {
-    const state = useStatesStore();
+    const state = useLoading();
 
     const inputValue = ref("");
 

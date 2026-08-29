@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import WImage from "./WImage.vue";
 import { toString } from "@/utils/validata";
 
 defineOptions({
@@ -17,7 +18,7 @@ defineProps<{
 <template>
     <div class="w-video" :title="title ? toString(title) : undefined">
         <div class="w-video-img">
-            <div class="video" :style="{'--src-path': `url(${src})`}"></div>
+            <w-image class="video" :src="src" />
             <div v-if="top" class="w-video-top">{{ top }}</div>
             <div v-if="left || right" class="w-video-mask">
                 <span v-if="left" :class="{'is-full': !right}">{{ left }}</span>
@@ -55,13 +56,10 @@ defineProps<{
         .video {
             width: 100%;
             height: 100%;
-            background-image: var(--src-path);
-            background-size: cover;
-            background-repeat: no-repeat;
             &:hover {
                 position: relative;
                 transform: scale(1.2);
-                transition: all 0.3s;
+                transition: transform 0.3s;
             }
         }
     }

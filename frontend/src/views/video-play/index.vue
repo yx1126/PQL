@@ -15,7 +15,7 @@ const playItemRefs = useTemplateRef("playItemRefs");
 
 const route = useRoute();
 const set = useSetStore();
-const state = useStatesStore();
+const state = useLoading();
 const store = useParserStore();
 const message = useMessage();
 

@@ -38,7 +38,7 @@ function onCommand(command: string) {
         :title="data?.roomName"
     >
         <div class="live-card__img">
-            <div class="live-img" :style="`--live-url: url(${data?.roomPic})`"></div>
+            <w-image class="live-img" :src="data?.roomPic" />
             <div class="live-owner" :title="data?.ownerName">
                 <w-image class="live-avatar" :src="data?.ownerAvatar" />
                 <div class="live-name">{{ data?.ownerName }}</div>

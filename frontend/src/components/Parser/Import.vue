@@ -12,7 +12,7 @@ const emit = defineEmits<{
 }>();
 
 const message = useMessage();
-const state = useStatesStore();
+const state = useLoading();
 
 const visible = ref(false);
 const inputValue = ref("");

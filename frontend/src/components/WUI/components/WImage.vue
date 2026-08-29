@@ -7,18 +7,19 @@ defineOptions({
 
 const {
     size = "100% 100%",
+    type = "img",
 } = defineProps<{
     src?: string;
-    type?: "default" | "img";
+    type?: "back" | "img";
     size?: CSSProperties["backgroundSize"];
 }>();
 </script>
 
 <template>
-    <img v-if="type === 'img'" :src>
+    <img v-if="type === 'img'" class="w-image" :src draggable="false" loading="lazy">
     <div
         v-else
-        class="w-image"
+        class="w-image is-back"
         :style="{
             '--w-image-path': `url(${src})`,
             '--w-image-size': size,
@@ -28,9 +29,11 @@ const {
 
 <style lang="scss" scoped>
 .w-image {
-    display: inline-flex;
-    background-image: var(--w-image-path);
-    background-size: var(--w-image-size);
-    background-repeat: no-repeat;
+    @include when(back) {
+        display: inline-flex;
+        background-image: var(--w-image-path);
+        background-size: var(--w-image-size);
+        background-repeat: no-repeat;
+    }
 }
 </style>

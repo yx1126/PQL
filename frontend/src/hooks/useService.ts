@@ -16,7 +16,7 @@ export interface ServiceOptions<
 }
 
 export interface ServiceBack<T, P extends any[] = any[]> {
-    loading: Ref<boolean>;
+    loading: ComputedRef<boolean>;
     data: Ref<T & {}>;
     query: (...args: P) => void;
 }
@@ -36,7 +36,7 @@ export function useService<
         error: errorFn,
     } = (isObject(request) ? request : { request, default: defaultValue, immediate: true }) as ServiceOptions<T, P>;
 
-    const state = useStatesStore();
+    const state = useLoading();
     const message = useMessage();
 
     const initialValue = isFn<() => T>(dv) ? dv() : dv;
@@ -45,7 +45,7 @@ export function useService<
 
     const load = ref(false);
 
-    const loading = computed(() => isLayoutLoad ? state.loading : load.value);
+    const loading = computed(() => isLayoutLoad ? state.loading.value : load.value);
 
     // 立即执行
     onBeforeMount(() => {

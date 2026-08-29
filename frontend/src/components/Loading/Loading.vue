@@ -48,10 +48,12 @@ export default defineComponent({
         animation: rotate 1s linear infinite;
         position: relative;
         z-index: 2;
+        will-change: transform;
         & > i {
             color: var(--el-color-primary);
             animation: rotate2 1s linear infinite;
             font-size: 20px;
+            will-change: transform;
             &:nth-child(1) {
                 color: color-mix(in oklab, var(--el-color-primary) 20%, transparent);
             }

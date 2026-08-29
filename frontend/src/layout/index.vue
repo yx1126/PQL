@@ -7,14 +7,16 @@ defineOptions({
     name: "Layout",
 });
 
-const state = useStatesStore();
+const {
+    loading,
+} = useLoading();
 </script>
 
 <template>
     <div class="w-layout h-full">
         <w-header />
         <div class="w-layout__main">
-            <Loading v-if="state.loading" position="absolute" mask />
+            <Loading v-if="loading" position="absolute" mask />
             <keep-route-view />
         </div>
     </div>
