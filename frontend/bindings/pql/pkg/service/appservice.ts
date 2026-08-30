@@ -16,6 +16,10 @@ export function AutoStartStatus(): $CancellablePromise<application$0.AutostartSt
     return $Call.ByID(160064592);
 }
 
+export function ClearStore(): $CancellablePromise<void> {
+    return $Call.ByID(171905787);
+}
+
 export function Close(): $CancellablePromise<void> {
     return $Call.ByID(3444250859);
 }
@@ -28,12 +32,27 @@ export function GetDarkMode(): $CancellablePromise<boolean> {
     return $Call.ByID(968943232);
 }
 
+/**
+ * store
+ */
+export function GetStore(key: string): $CancellablePromise<string> {
+    return $Call.ByID(1134956760, key);
+}
+
 export function HasHEVCExtension(): $CancellablePromise<boolean> {
     return $Call.ByID(1839878488);
 }
 
+export function RemoveStore(key: string): $CancellablePromise<void> {
+    return $Call.ByID(947968190, key);
+}
+
 export function Request(config: request$0.HttpRequestConfig): $CancellablePromise<any> {
     return $Call.ByID(2385389786, config);
+}
+
+export function SetStore(key: string, value: string): $CancellablePromise<void> {
+    return $Call.ByID(3973503364, key, value);
 }
 
 export function StartOnWindow(): $CancellablePromise<void> {

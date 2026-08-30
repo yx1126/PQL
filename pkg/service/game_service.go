@@ -21,7 +21,7 @@ func NewGameService(sc *ServiceContext) *GameService {
 // Initialisation
 func (g *GameService) ServiceStartup(ctx context.Context, options application.ServiceOptions) error {
 	g.ctx = ctx
-	if err := g.game.Init(); err != nil {
+	if err := g.Game.Init(); err != nil {
 		return err
 	}
 	return nil
@@ -32,9 +32,9 @@ func (gs *GameService) ServiceShutdown() error {
 }
 
 func (g *GameService) GetGameList() []vo.GameVo {
-	return g.game.GetGameList()
+	return g.Game.GetGameList()
 }
 
 func (g *GameService) UpdateGame(game vo.UpdateGameVo) error {
-	return g.game.UpdateGame(game)
+	return g.Game.UpdateGame(game)
 }

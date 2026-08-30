@@ -11,28 +11,29 @@ import (
 )
 
 type ServiceContext struct {
-	app  *application.App
-	http *request.Http
-	db   *DB.Sqlite
+	App    *application.App
+	Window *application.WebviewWindow
+	Http   *request.Http
+	DB     *DB.Sqlite
 
 	// db
-	game   *ds.GameService
-	live   *ds.LiveService
-	parser *ds.ParserService
-	set    *ds.SettingService
-	menu   *ds.MenuService
-	store  *ds.StoreService
+	Game   *ds.GameService
+	Live   *ds.LiveService
+	Parser *ds.ParserService
+	Set    *ds.SettingService
+	Menu   *ds.MenuService
+	Store  *ds.StoreService
 }
 
 func (sc *ServiceContext) open() error {
-	if err := sc.db.Open("PQL.db"); err != nil {
+	if err := sc.DB.Open("PQL.db"); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (sc *ServiceContext) autoMigrate() {
-	sc.db.AutoMigrate(
+	sc.DB.AutoMigrate(
 		&model.Game{},
 		&model.Live{},
 		&model.Parser{},
@@ -43,16 +44,16 @@ func (sc *ServiceContext) autoMigrate() {
 }
 
 func (sc *ServiceContext) Close() error {
-	if err := sc.db.Close(); err != nil {
+	if err := sc.DB.Close(); err != nil {
 		return err
 	}
-	if err := sc.http.Close(); err != nil {
+	if err := sc.Http.Close(); err != nil {
 		return err
 	}
 	return nil
 }
 
-func New(app *application.App) (*ServiceContext, error) {
+func New(app *application.App, window *application.WebviewWindow) (*ServiceContext, error) {
 
 	// http
 	http := request.New()
@@ -66,21 +67,22 @@ func New(app *application.App) (*ServiceContext, error) {
 
 	// ServiceContext
 	sc := &ServiceContext{
-		app:  app,
-		http: http,
-		db:   ns,
+		App:    app,
+		Window: window,
+		Http:   http,
+		DB:     ns,
 
 		// services
-		game:   ds.NewGameService(ns, ctx),
-		live:   ds.NewLiveService(ns, ctx),
-		parser: ds.NewParserService(ns, ctx),
-		set:    ds.NewSettingService(ns, ctx),
-		menu:   ds.NewMenuService(ns, ctx),
-		store:  ds.NewStoreService(ns, ctx),
+		Game:   ds.NewGameService(ns, ctx),
+		Live:   ds.NewLiveService(ns, ctx),
+		Parser: ds.NewParserService(ns, ctx),
+		Set:    ds.NewSettingService(ns, ctx),
+		Menu:   ds.NewMenuService(ns, ctx),
+		Store:  ds.NewStoreService(ns, ctx),
 	}
 
 	if err := sc.open(); err != nil {
-		if err := sc.http.Close(); err != nil {
+		if err := sc.Http.Close(); err != nil {
 			return nil, err
 		}
 		return nil, err

@@ -32,7 +32,7 @@ func (gs *ParserService) ServiceShutdown() error {
 }
 
 func (p *ParserService) GetParserList() []vo.ParserVo {
-	return p.parser.GetParserList()
+	return p.Parser.GetParserList()
 }
 
 func (p *ParserService) CreateParsers(source string) (vo.Result[video.ParseOption], error) {
@@ -55,7 +55,7 @@ func (p *ParserService) CreateParsers(source string) (vo.Result[video.ParseOptio
 			failureCount++
 			continue
 		}
-		if err := p.parser.CreateParser(vo.CreateParserVo{
+		if err := p.Parser.CreateParser(vo.CreateParserVo{
 			BaseParserVo: vo.BaseParserVo{
 				Type:        v.Type,
 				Source:      string(rawSource),
@@ -79,12 +79,12 @@ func (p *ParserService) CreateParsers(source string) (vo.Result[video.ParseOptio
 }
 
 func (p *ParserService) UpdateToken(id int, token string) error {
-	return p.parser.UpdateToken(id, token)
+	return p.Parser.UpdateToken(id, token)
 }
 
 func (p *ParserService) DeleteParser(ids []int) error {
 	if len(ids) <= 0 {
 		return errors.New("请选择要删除的数据")
 	}
-	return p.parser.DeleteParser(ids)
+	return p.Parser.DeleteParser(ids)
 }

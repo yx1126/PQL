@@ -3,24 +3,23 @@ package main
 import (
 	_ "embed"
 	"pql/pkg/constant"
+	"pql/pkg/service"
 	"pql/pkg/utils/types"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
 type trayApp struct {
-	app     *application.App
+	*service.ServiceContext
 	systray *application.SystemTray
-	window  *application.WebviewWindow
 }
 
 //go:embed build/appicon.png
 var icon []byte
 
-func NewSystray(app *application.App, window *application.WebviewWindow) *trayApp {
+func NewSystray(sc *service.ServiceContext) *trayApp {
 	t := &trayApp{
-		app:    app,
-		window: window,
+		ServiceContext: sc,
 	}
 	t.setup()
 	t.createMenus()
@@ -28,31 +27,31 @@ func NewSystray(app *application.App, window *application.WebviewWindow) *trayAp
 }
 
 func (t *trayApp) setup() {
-	systray := t.app.SystemTray.New()
+	systray := t.App.SystemTray.New()
 
 	systray.SetIcon(icon)
 	systray.SetTooltip("PQL")
 	systray.SetLabel("PQL")
 
 	systray.OnClick(func() {
-		if t.window.IsMinimised() {
-			t.window.Restore()
+		if t.Window.IsMinimised() {
+			t.Window.Restore()
 		}
-		t.window.Show().Focus()
+		t.Window.Show().Focus()
 	})
 
 	t.systray = systray
 }
 
 func (t *trayApp) setTheme(theme int) {
-	t.app.Event.Emit(constant.AppTheme, types.WindowTheme{
+	t.App.Event.Emit(constant.AppTheme, types.WindowTheme{
 		Type:  "*",
 		Theme: theme,
 	})
 }
 
 func (t *trayApp) createMenus() {
-	menu := t.app.NewMenu()
+	menu := t.App.NewMenu()
 
 	// theme
 	theme := menu.AddSubmenu("主题")
@@ -68,21 +67,21 @@ func (t *trayApp) createMenus() {
 
 	// 重置位置
 	menu.Add("重置").OnClick(func(ctx *application.Context) {
-		t.window.Center()
-		t.window.Restore()
-		t.window.Show().Focus()
+		t.Window.Center()
+		t.Window.Restore()
+		t.Window.Show().Focus()
 	})
 
 	// setting
 	menu.Add("设置").OnClick(func(ctx *application.Context) {
-		t.app.Event.Emit(constant.PageChange, types.PageChange{
+		t.App.Event.Emit(constant.PageChange, types.PageChange{
 			Type: "push",
 			Path: "/sub/setting",
 		})
-		if t.window.IsMinimised() {
-			t.window.Restore()
+		if t.Window.IsMinimised() {
+			t.Window.Restore()
 		}
-		t.window.Show().Focus()
+		t.Window.Show().Focus()
 	})
 
 	// split
@@ -90,7 +89,7 @@ func (t *trayApp) createMenus() {
 
 	// quit
 	menu.Add("退出").OnClick(func(ctx *application.Context) {
-		t.app.Quit()
+		t.App.Quit()
 	})
 	t.systray.SetMenu(menu)
 }

@@ -68,7 +68,7 @@ func (ws *WindowService) OpenNewWindow(options types.WindowOptions) {
 
 	ws.mu.Lock()
 	defer ws.mu.Unlock()
-	window := ws.app.Window.NewWithOptions(application.WebviewWindowOptions{
+	window := ws.App.Window.NewWithOptions(application.WebviewWindowOptions{
 		Title: options.Title,
 		Name:  options.Name,
 		Windows: application.WindowsWindow{
@@ -91,7 +91,7 @@ func (ws *WindowService) OpenNewWindow(options types.WindowOptions) {
 		delete(ws.winMap, options.Name)
 		ws.mu.Unlock()
 	})
-	RegisterWindowStatusEvent(ws.app, window)
+	RegisterWindowStatusEvent(ws.App, window)
 }
 
 func (ws *WindowService) Close(name string) {

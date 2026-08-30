@@ -36,6 +36,8 @@ func init() {
 	application.RegisterEvent[types.WindowState](constant.WindowRestore)
 	// 主题切换事件
 	application.RegisterEvent[types.WindowTheme](constant.AppTheme)
+	// 设置更改
+	application.RegisterEvent[string](constant.AppSetChange)
 	// 页面跳转事件
 	application.RegisterEvent[types.PageChange](constant.PageChange)
 }
@@ -82,14 +84,6 @@ func main() {
 		insts.Add(zlog)
 	}
 
-	// 服务注册
-	sc, err := service.New(app)
-	if err != nil {
-		insts.Close()
-		log.Fatal(err)
-	}
-	insts.Add(sc)
-
 	mainWindow = app.Window.NewWithOptions(application.WebviewWindowOptions{
 		Title: "PQL",
 		Name:  "main",
@@ -107,8 +101,16 @@ func main() {
 		DevToolsEnabled:  true,
 	})
 
+	// 服务注册
+	sc, err := service.New(app, mainWindow)
+	if err != nil {
+		insts.Close()
+		log.Fatal(err)
+	}
+	insts.Add(sc)
+
 	// 托盘注册
-	trayApp := NewSystray(app, mainWindow)
+	trayApp := NewSystray(sc)
 	insts.Add(trayApp)
 
 	// 监听 app 退出

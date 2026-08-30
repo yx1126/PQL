@@ -17,7 +17,6 @@ export interface ParserState {
 
 export interface SetState extends PartialId<UpdateSettingVo> {
     windownName: string;
-    themeColor: string;
 }
 
 export interface MapState {

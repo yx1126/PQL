@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import Artplayer, { type Option } from "artplayer";
-import type { Selector, Control } from ".";
-import poster from "@/assets/video/poster.png";
-import Flv from "flv.js";
 import Hls from "hls.js";
+import Flv from "flv.js";
+import poster from "@/assets/video/poster.png";
 import QualitySvg from "@/assets/icon/quality.svg?raw";
 import CdnsSvg from "@/assets/icon/cdns.svg?raw";
 import { hotKeyPlugin } from "./plugins";
+import type { Selector, Control } from ".";
 
 const {
     src,

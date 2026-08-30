@@ -2,13 +2,13 @@ import { acceptHMRUpdate, defineStore } from "pinia";
 import { createTheme } from "@/utils/color";
 import { SetService } from "@bind/service";
 import { getIsDark, setTheme } from "@/utils/theme";
-import { Window } from "@wailsio/runtime";
+import { Window, Events } from "@wailsio/runtime";
 import type { SetState } from "#/stores";
 import type { UpdateSettingVo } from "@bind/vo";
 
 const defaultSetting: SetState = {
     windownName: "",
-    themeColor: "#ff9f43",
+    colorTheme: "#ff9f43",
     lang: "zh-cn", // 语言
     closeBehavior: 0,
     theme: 0,
@@ -26,18 +26,14 @@ export const useSetStore = defineStore("setting", () => {
     const state: SetState = reactive(Object.assign({}, defaultSetting));
 
     const primaryColor = computed({
-        get: () => state.themeColor,
+        get: () => state.colorTheme,
         set: value => {
-            state.themeColor = value || "#ff9f43";
+            state.colorTheme = value || "#ff9f43";
         },
     });
 
-    watch(() => [state.themeColor, state.theme], async ([color, theme]) => {
-        const root = document.documentElement;
-        const colorMap = createTheme(color as string, await getIsDark(theme as number));
-        for(const key in colorMap) {
-            root.style.setProperty(key, colorMap[key]);
-        }
+    watch(() => [state.colorTheme, state.theme], async () => {
+        updateTheme(await getIsDark(state.theme));
     }, {
         immediate: true,
     });
@@ -46,13 +42,16 @@ export const useSetStore = defineStore("setting", () => {
         state.closeBehavior,
         state.lang,
         state.theme,
+        state.colorTheme,
         state.videoSourceType,
         state.liveShowType,
         state.liveSpecialShowType,
         state.animeWeeklyType,
     ], async () => {
+        // 主窗口更改
         if(state.windownName !== import.meta.env.VITE_APP_MAIN_NAME) return;
         await updateConfig();
+        Events.Emit(WailsEvents.AppSetChange, "");
     });
 
     watch(() => state.theme, value => {
@@ -60,6 +59,14 @@ export const useSetStore = defineStore("setting", () => {
     }, {
         immediate: true,
     });
+
+    async function updateTheme(dark?: boolean) {
+        const root = document.documentElement;
+        const colorMap = createTheme(state.colorTheme, dark);
+        for(const key in colorMap) {
+            root.style.setProperty(key, colorMap[key]);
+        }
+    }
 
     async function updateConfig() {
         await SetService.UpdateConfig(state as UpdateSettingVo);
@@ -79,6 +86,7 @@ export const useSetStore = defineStore("setting", () => {
         state.liveShowType = res.liveShowType;
         state.liveSpecialShowType = res.liveSpecialShowType;
         state.animeWeeklyType = res.animeWeeklyType;
+        state.colorTheme = res.colorTheme;
         const store = useParserStore();
         if(!state.videoSourceType && store.videoList.length > 0) {
             state.videoSourceType = store.videoList.at(0)?.subType || "";
@@ -93,6 +101,7 @@ export const useSetStore = defineStore("setting", () => {
         primaryColor,
         load,
         updateConfig,
+        updateTheme,
     };
 });
 

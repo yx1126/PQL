@@ -7,8 +7,10 @@ type Setting struct {
 	CloseBehavior int `json:"closeBehavior" gorm:"default:0"`
 	// 主题 暗黑:0 亮色:1 跟随系统:2
 	Theme int `json:"theme" gorm:"default:0"`
+	// 颜色主题
+	ColorTheme string `json:"colorTheme"`
 	// 语言
-	Lang string `json:"lang"`
+	Lang string `json:"lang" gorm:"default:zh-cn"`
 
 	// 视频详情页
 	// Tab切换
@@ -28,7 +30,7 @@ type Setting struct {
 
 	// 动漫
 	// 周番显示类型
-	AnimeWeeklyType string `json:"animeWeeklyType"`
+	AnimeWeeklyType string `json:"animeWeeklyType" gorm:"default:cn"`
 	BaseModel
 }
 

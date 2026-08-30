@@ -42,22 +42,20 @@ func (p *ParserService) GetParser(parserType, subType string) (*vo.ParserVo, err
 }
 
 func (p *ParserService) CreateParser(parser vo.CreateParserVo) error {
-	tx := p.db.WithContext(p.ctx).Begin()
 
 	var oldParser *vo.ParserVo
 
-	err := tx.Model(&model.Parser{}).
+	err := p.db.WithContext(p.ctx).Model(&model.Parser{}).
 		Where("type = ?", parser.Type).
 		Where("sub_type = ?", parser.SubType).
 		Take(&oldParser).Error
 
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		tx.Rollback()
 		return err
 	}
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		if err := tx.Model(&model.Parser{}).
+		if err := p.db.WithContext(p.ctx).Model(&model.Parser{}).
 			Create(&model.Parser{
 				Type:        parser.Type,
 				Source:      parser.Source,
@@ -68,11 +66,10 @@ func (p *ParserService) CreateParser(parser vo.CreateParserVo) error {
 				SubType:     parser.SubType,
 				HomePage:    parser.HomePage,
 			}).Error; err != nil {
-			tx.Rollback()
 			return err
 		}
 	} else {
-		if err := tx.Model(&model.Parser{}).
+		if err := p.db.WithContext(p.ctx).Model(&model.Parser{}).
 			Select("type", "source", "version", "author", "description", "icon", "sub_type", "home_page").
 			Where("id = ?", oldParser.Id).
 			Updates(&model.Parser{
@@ -85,27 +82,10 @@ func (p *ParserService) CreateParser(parser vo.CreateParserVo) error {
 				SubType:     parser.SubType,
 				HomePage:    parser.HomePage,
 			}).Error; err != nil {
-			tx.Rollback()
 			return err
 		}
 	}
-	return tx.Commit().Error
-}
-
-func (p *ParserService) UpdateParser(parser vo.UpdateParserVo) error {
-	return p.db.WithContext(p.ctx).
-		Model(&model.Parser{}).
-		Where("id = ?", parser.Id).
-		Updates(&model.Parser{
-			Type:        parser.Type,
-			Source:      parser.Source,
-			Version:     parser.Version,
-			Author:      parser.Author,
-			Description: parser.Description,
-			Icon:        parser.Icon,
-			SubType:     parser.SubType,
-			HomePage:    parser.HomePage,
-		}).Error
+	return nil
 }
 
 func (p *ParserService) UpdateToken(id int, token string) error {

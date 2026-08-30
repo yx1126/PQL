@@ -5,6 +5,7 @@ import "pql/DB/model"
 type BaseSettingVo struct {
 	CloseBehavior        int    `json:"closeBehavior"`
 	Theme                int    `json:"theme"`
+	ColorTheme           string `json:"colorTheme"`
 	Lang                 string `json:"lang"`
 	VideoDetailTabActive string `json:"videoDetailTabActive"`
 	VideoDetailGrid      string `json:"videoDetailGrid"`

@@ -88,6 +88,7 @@ export interface Result<T> {
 export interface SettingVo {
     "closeBehavior": number;
     "theme": number;
+    "colorTheme": string;
     "lang": string;
     "videoDetailTabActive": string;
     "videoDetailGrid": string;
@@ -132,6 +133,7 @@ export interface UpdateMenuVo {
 export interface UpdateSettingVo {
     "closeBehavior": number;
     "theme": number;
+    "colorTheme": string;
     "lang": string;
     "videoDetailTabActive": string;
     "videoDetailGrid": string;

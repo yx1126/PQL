@@ -9,10 +9,6 @@ import { Call as $Call, CancellablePromise as $CancellablePromise } from "@wails
 // @ts-ignore: Unused imports
 import * as vo$0 from "../vo/models.js";
 
-export function ClearStore(): $CancellablePromise<void> {
-    return $Call.ByID(3787695032);
-}
-
 export function Close(): $CancellablePromise<void> {
     return $Call.ByID(3304390458);
 }
@@ -29,21 +25,6 @@ export function GetConfig(): $CancellablePromise<vo$0.SettingVo> {
  */
 export function GetMenuList(): $CancellablePromise<vo$0.MenuVo[] | null> {
     return $Call.ByID(3235152377);
-}
-
-/**
- * store
- */
-export function GetStore(key: string): $CancellablePromise<string> {
-    return $Call.ByID(204514075, key);
-}
-
-export function RemoveStore(key: string): $CancellablePromise<void> {
-    return $Call.ByID(3627475339, key);
-}
-
-export function SetStore(key: string, value: string): $CancellablePromise<void> {
-    return $Call.ByID(3491438951, key, value);
 }
 
 export function UpdateConfig(config: vo$0.UpdateSettingVo): $CancellablePromise<void> {

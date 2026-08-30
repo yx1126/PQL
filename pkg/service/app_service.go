@@ -25,7 +25,7 @@ func NewAppService(sc *ServiceContext) *AppService {
 
 // Initialisation
 func (a *AppService) ServiceStartup(ctx context.Context, options application.ServiceOptions) error {
-	// if a.app.Env.Info().Debug {
+	// if a.App.Env.Info().Debug {
 	// 	a.resty.SetDebug(true)
 	// }
 	return nil
@@ -37,7 +37,7 @@ func (a *AppService) ServiceShutdown() error {
 }
 
 func (a *AppService) AutoStartStatus() application.AutostartStatus {
-	st, err := a.app.Autostart.Status()
+	st, err := a.App.Autostart.Status()
 	if err != nil {
 		return application.AutostartStatus{
 			Enabled: false,
@@ -47,20 +47,20 @@ func (a *AppService) AutoStartStatus() application.AutostartStatus {
 }
 
 func (a *AppService) StartOnWindow() error {
-	return a.app.Autostart.Enable()
+	return a.App.Autostart.Enable()
 }
 
 func (a *AppService) DisableOnWindow() error {
-	return a.app.Autostart.Disable()
+	return a.App.Autostart.Disable()
 }
 
 func (a *AppService) GetDarkMode() bool {
-	return a.app.Env.IsDarkMode()
+	return a.App.Env.IsDarkMode()
 }
 
 func (a *AppService) Request(config request.HttpRequestConfig) any {
 
-	res, err := a.http.Request(config)
+	res, err := a.Http.Request(config)
 
 	if err != nil {
 		return err
@@ -99,4 +99,21 @@ func (a *AppService) HasHEVCExtension() bool {
 	}
 
 	return strings.TrimSpace(out.String()) != ""
+}
+
+// store
+func (s *AppService) GetStore(key string) string {
+	return s.Store.GetStore(key)
+}
+
+func (s *AppService) SetStore(key, value string) error {
+	return s.Store.SetStore(key, value)
+}
+
+func (s *AppService) RemoveStore(key string) error {
+	return s.Store.DeleteStore(key)
+}
+
+func (s *AppService) ClearStore() error {
+	return s.Store.ClearStore()
 }

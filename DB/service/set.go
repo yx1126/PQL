@@ -27,6 +27,7 @@ func (s *SettingService) Init() error {
 		sets := model.Setting{
 			CloseBehavior:        0,
 			Theme:                0,
+			ColorTheme:           "#ff9f43",
 			Lang:                 "zh-cn",
 			VideoDetailTabActive: "info",
 			VideoDetailGrid:      "default",
@@ -58,6 +59,7 @@ func (s *SettingService) UpdateSetting(config vo.UpdateSettingVo) error {
 		Updates(&model.Setting{
 			CloseBehavior:        config.CloseBehavior,
 			Theme:                config.Theme,
+			ColorTheme:           config.ColorTheme,
 			Lang:                 config.Lang,
 			VideoDetailTabActive: config.VideoDetailTabActive,
 			VideoDetailGrid:      config.VideoDetailGrid,

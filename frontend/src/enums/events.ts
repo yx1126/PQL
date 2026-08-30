@@ -6,7 +6,7 @@ export enum WailsEvents {
 
     // app
     AppTheme = "app:theme",
-    AppSubTheme = "app:sub:theme",
+    AppSetChange = "app:set:change",
 
     // page
     PageChange = "page:change",

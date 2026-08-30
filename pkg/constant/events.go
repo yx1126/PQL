@@ -7,7 +7,8 @@ const (
 	WindowRestore    = "window:restore"
 
 	// app
-	AppTheme = "app:theme"
+	AppTheme     = "app:theme"
+	AppSetChange = "app:set:change"
 
 	// page
 	PageChange = "page:change"

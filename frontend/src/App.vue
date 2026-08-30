@@ -18,6 +18,15 @@ const local = computed(() => {
 });
 
 onBeforeMount(() => {
+    onWatchSystemTheme();
+    onWatch();
+});
+
+onBeforeUnmount(() => {
+    Events.OffAll();
+});
+
+function onWatch() {
     // 页面跳转
     if(set.windownName === import.meta.env.VITE_APP_MAIN_NAME) {
         Events.On(WailsEvents.PageChange, ({ data }) => {
@@ -34,26 +43,35 @@ onBeforeMount(() => {
             }
         });
     }
+    // 设置变化
+    if(set.windownName !== import.meta.env.VITE_APP_MAIN_NAME) {
+        Events.On(WailsEvents.AppSetChange, () => set.load());
+    }
     // 系统主题变化
     Events.On(WailsEvents.AppTheme, async ({ data }) => {
-        set.theme = data.theme;
         switch(data.type) {
         case "system":
-            if(set.theme === 2) {
-                const dark = await AppService.GetDarkMode();
-                setTheme(dark);
-            };
+            onWatchSystemTheme();
             break;
         default:
-            setTheme(data.theme);
-            break;
+            // TODO BUG
+            set.theme = data.theme;
+            onWatchSystemTheme(() => {
+                setTheme(data.theme);
+            });
         }
     });
-});
+}
 
-onBeforeUnmount(() => {
-    Events.OffAll();
-});
+async function onWatchSystemTheme(fn?: () => void) {
+    if(set.theme === 2) {
+        const dark = await AppService.GetDarkMode();
+        setTheme(dark);
+        set.updateTheme(dark);
+        return;
+    };
+    fn && fn();
+}
 </script>
 
 <template>

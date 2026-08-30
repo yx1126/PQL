@@ -16,6 +16,6 @@ func NewFileServer(sc *ServiceContext) *FileService {
 }
 
 func (f *FileService) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	dir := tool.Flag(f.app.Env.Info().Debug, "bin/.PQL", ".PQL")
+	dir := tool.Flag(f.App.Env.Info().Debug, "bin/.PQL", ".PQL")
 	http.FileServer(http.Dir(dir)).ServeHTTP(w, r)
 }

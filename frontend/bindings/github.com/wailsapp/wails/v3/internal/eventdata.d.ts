@@ -12,6 +12,7 @@ import type * as types$0 from "../../../../../pql/pkg/utils/types/models.js";
 declare module "@wailsio/runtime" {
     namespace Events {
         interface CustomEvents {
+            "app:set:change": string;
             "app:theme": types$0.WindowTheme;
             "page:change": types$0.PageChange;
             "window:maximise": types$0.WindowState;

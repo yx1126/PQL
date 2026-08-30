@@ -26,8 +26,8 @@ func NewLiveService(sc *ServiceContext) *LiveService {
 
 // Initialisation
 func (ls *LiveService) ServiceStartup(ctx context.Context, options application.ServiceOptions) error {
-	ls.remote = live.New(ls.http)
-	ttwid := ls.store.GetStore(constant.Ttwid)
+	ls.remote = live.New(ls.Http)
+	ttwid := ls.Store.GetStore(constant.Ttwid)
 	ls.remote.SetTtwid(ttwid)
 	return nil
 }
@@ -39,12 +39,12 @@ func (ls *LiveService) ServiceShutdown() error {
 func (ls *LiveService) OpenWeb(roomId, typee string) {
 	url := ls.remote.GetRoomWebUri(roomId, typee)
 	if url != "" {
-		ls.app.Browser.OpenURL(url)
+		ls.App.Browser.OpenURL(url)
 	}
 }
 
 func (ls *LiveService) GetLiveList() []vo.LiveVo {
-	lives := ls.live.GetLiveList()
+	lives := ls.Live.GetLiveList()
 	if len(lives) <= 0 {
 		return lives
 	}
@@ -77,7 +77,7 @@ func (ls *LiveService) Search(params vo.LiveSearchVo) (*live.LiveResponse[live.R
 }
 
 func (ls *LiveService) GetLiveInfo(roomId, roomtype string) *vo.LiveVo {
-	return ls.live.GetLiveInfo(roomId, roomtype)
+	return ls.Live.GetLiveInfo(roomId, roomtype)
 }
 
 func (ls *LiveService) GetLiveRemoteInfo(roomId, roomtype string) (*live.RoomInfo, error) {
@@ -93,15 +93,15 @@ func (ls *LiveService) CreateLive(live vo.CreateLiveVo) error {
 	if err != nil {
 		return err
 	}
-	return ls.live.CreateLive(live)
+	return ls.Live.CreateLive(live)
 }
 
 func (ls *LiveService) UpdateLive(live vo.UpdateLiveVo) error {
-	return ls.live.UpdateLive(live)
+	return ls.Live.UpdateLive(live)
 }
 
 func (ls *LiveService) DeleteLive(ids []int) error {
-	return ls.live.DeleteLive(ids)
+	return ls.Live.DeleteLive(ids)
 }
 
 func (ls *LiveService) UpdateTtwid(ttwid string) error {
@@ -109,7 +109,7 @@ func (ls *LiveService) UpdateTtwid(ttwid string) error {
 		return errors.New("ttwid不能为空！")
 	}
 	ls.remote.SetTtwid(ttwid)
-	return ls.store.SetStore(constant.Ttwid, ttwid)
+	return ls.Store.SetStore(constant.Ttwid, ttwid)
 }
 
 func liveSort(a, b vo.LiveVo) int {
