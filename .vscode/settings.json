@@ -82,7 +82,8 @@
         "**/node_modules": true,
         "**/bower_components": true,
         "**/*.code-search": true,
-        "**/*.svg": true
+        "**/*.svg": true,
+        "frontend/src/plugins/artplayer": true,
     },
     "explorer.fileNesting.patterns": {
         "*.ts": "${capture}.js,${capture}.*.ts",

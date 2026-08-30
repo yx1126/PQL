@@ -7,10 +7,16 @@ defineOptions({
 });
 
 const route = useRoute();
+const router = useRouter();
 const msgbox = useMessageBox();
 const store = useParserStore();
 
-const data = computed(() => store.parserList.filter(v => v.type === route.query.type));
+const source = ref(route.query.type as string);
+
+const data = computed(() => {
+    if(!route.query.type) return store.parserList;
+    return store.parserList.filter(v => v.type === route.query.type);
+});
 
 function onDelete(row: any) {
     msgbox.confirm("确认要删除源吗？").then(async () => {
@@ -25,17 +31,30 @@ function onLink(link: string) {
     }
     Browser.OpenURL(link);
 }
+
+function onChange() {
+    router.replace("/sub/source?type=" + source.value || "");
+}
 </script>
 
 <template>
     <div class="source">
+        <portal to="layout-extra">
+            <el-select
+                v-model="source"
+                class="w-[150px]"
+                placeholder="请选择源类型"
+                clearable
+                :empty-values="['','']"
+                value-on-clear=""
+                @change="onChange"
+            >
+                <el-option label="视频" value="video" />
+                <el-option label="动漫" value="anime" />
+            </el-select>
+        </portal>
         <div class="w-box source-table">
             <el-table :data="data" height="100%" size="large">
-                <!-- <el-table-column type="expand" align="center">
-                    <template #default="{row}">
-                    <div class="code">{{ JSON.stringify(row.source, null, 4) }}</div>
-                    </template>
-                    </el-table-column> -->
                 <el-table-column type="index" label="序号" width="80" align="center" />
                 <el-table-column label="图标" prop="icon" width="100" align="center">
                     <template #default="{row}">
@@ -55,6 +74,7 @@ function onLink(link: string) {
                 <el-table-column label="操作" align="center" width="80">
                     <template #default="{row}">
                         <div class="w-table-actions">
+                            <!-- <el-link type="primary" icon="ele-View" @click="onDelete(row)" /> -->
                             <el-link type="danger" icon="ele-Delete" @click="onDelete(row)" />
                         </div>
                     </template>
@@ -84,7 +104,7 @@ function onLink(link: string) {
         width: 100%;
         max-height: 200px;
         overflow: auto;
-        white-space: nowrap;
+        white-space: pre-wrap;
         @include hidden-scroll;
     }
 }

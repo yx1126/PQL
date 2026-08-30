@@ -5,6 +5,7 @@ import router from "@/router";
 import pinia from "@/stores";
 import Directive from "@/directive";
 import ElementPlus from "@/plugins/element-plus";
+import PortalVue from "portal-vue";
 import GlobalRegister from "@/components/GlobalRegister";
 import "@/components/WebComponents";
 import WUI from "@/components/WUI";
@@ -20,6 +21,7 @@ app.use(pinia)
     .use(Directive)
     .use(i18n)
     .use(GlobalRegister)
+    .use(PortalVue)
     .use(WUI);
 
 router.isReady().then(async () => {

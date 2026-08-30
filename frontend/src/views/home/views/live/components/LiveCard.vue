@@ -1,4 +1,5 @@
 <script setup lang="ts" generic="T extends LiveVo | RoomInfo">
+import poster from "@/assets/video/poster.png";
 import type { RoomInfo } from "@bind/parse/live";
 import type { LiveVo } from "@bind/vo";
 import type { VNode } from "vue";
@@ -38,7 +39,7 @@ function onCommand(command: string) {
         :title="data?.roomName"
     >
         <div class="live-card__img">
-            <w-image class="live-img" :src="data?.roomPic" />
+            <w-image class="live-img" :src="data?.roomPic || poster" />
             <div class="live-owner" :title="data?.ownerName">
                 <w-image class="live-avatar" :src="data?.ownerAvatar" />
                 <div class="live-name">{{ data?.ownerName }}</div>

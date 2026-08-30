@@ -31,6 +31,7 @@
         "mui-player-desktop-plugin": "^1.6.0",
         "nprogress": "^0.2.0",
         "pinia": "^3.0.4",
+        "portal-vue": "3.0.0-beta.0",
         "qs": "^6.15.3",
         "split.js": "^1.6.5",
         "vue": "^3.5.42",

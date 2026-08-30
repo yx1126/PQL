@@ -22,7 +22,9 @@ function onBack() {
                 <el-link icon="ele-Back" @click="onBack" />
                 <span class="title">{{ subTitle }}</span>
             </div>
-            <div class="sublayout__header-extra"></div>
+            <div class="sublayout__header-extra">
+                <portal-target name="layout-extra" />
+            </div>
         </div>
         <div class="sublayout__main">
             <keep-route-view />
@@ -51,12 +53,17 @@ function onBack() {
             flex: 1;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: var(--w-layout-space);
             --el-font-size-base: 18px;
             .title {
                 // font-size: 18px;
                 line-height: 1;
             }
+        }
+        &-extra {
+            display: flex;
+            align-items: center;
+            gap: var(--w-layout-space);
         }
     }
     &__main {

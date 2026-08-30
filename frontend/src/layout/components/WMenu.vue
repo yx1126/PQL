@@ -59,17 +59,18 @@ function onMenuClick(menu: Menu) {
         cursor: pointer;
         border-radius: 2px;
         transition:
-            color 150ms var(--w-trans),
-            background 150ms var(--w-trans);
+            color 0.3s var(--w-trans),
+            background 0.3s var(--w-trans);
         position: relative;
         z-index: 1;
+        --w-linear-gradient: color-mix(in oklab, var(--el-color-primary) 10%, transparent);
         &:not(.is-active):hover {
             color: var(--el-color-primary);
-            background: linear-gradient(180deg, transparent 10%, rgba(255, 159, 67, 0.1) 100%);
+            background: linear-gradient(180deg, transparent 10%, var(--w-linear-gradient) 100%);
         }
         @include when(active) {
             color: var(--el-color-primary);
-            background: linear-gradient(180deg, transparent 10%, rgba(255, 159, 67, 0.1) 100%);
+            background: linear-gradient(180deg, transparent 10%, var(--w-linear-gradient) 100%);
             &::after {
                 content: "";
                 width: 100%;

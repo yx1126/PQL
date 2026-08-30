@@ -1,0 +1,19 @@
+diff --git a/package.json b/package.json
+index 0f43855d15d77143441472a6acd3411aee3dd771..ce377906e2d595afc8141f6f4e83161263e66fe9 100644
+--- a/package.json
++++ b/package.json
+@@ -14,10 +14,12 @@
+   "module": "dist/portal-vue.es.js",
+   "types": "dist/index.d.ts",
+   "exports": {
+-    "./": "./",
+     "./package.json": "./package.json",
+     ".": {
+-      "import": "./dist/portal-vue.es.js",
++      "import": {
++        "types": "./dist/index.d.ts",
++        "default": "./dist/portal-vue.es.js"
++      },
+       "require": "./dist/portal-vue.umd.js"
+     },
+     "./dev": {
