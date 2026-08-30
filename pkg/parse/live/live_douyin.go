@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"pql/pkg/request"
 	"pql/pkg/utils/tool"
+	"strconv"
 	"strings"
 )
 
@@ -234,18 +235,24 @@ func (d *Douyin) GetPlayUrl(roomId string, extra map[string]string) (*LiveInfo, 
 		return nil, err
 	}
 
-	if strings.TrimSpace(cdn) == "" {
-		cdn = "main-flv"
+	// 线路
+	cnds := []CdnsWithName{}
+	count := 0
+	for k, _ := range stream.Common.Lines {
+		count++
+		cnds = append(cnds, CdnsWithName{
+			Name: "线路" + strconv.Itoa(count),
+			Cdn:  k + "-flv",
+		})
+	}
+
+	// 设置默认值
+	if strings.TrimSpace(cdn) == "" && len(cnds) > 0 {
+		cdn = cnds[0].Cdn
 	}
 
 	if strings.TrimSpace(rate) == "-1" {
 		rate = rd.Stream.LiveCoreSdkData.PullData.Options.DefaultQuality.SdkKey
-	}
-
-	// 线路
-	cnds := []CdnsWithName{
-		{Name: "线路一", Cdn: "main-flv"},
-		{Name: "线路二", Cdn: "backup-flv"},
 	}
 
 	// 清晰度
@@ -298,6 +305,7 @@ func (d *Douyin) getBaseInfo(roomId string) (*DouyinResponse[DouyinRoomInfo], er
 	if err != nil {
 		return nil, err
 	}
+
 	var result DouyinResponse[DouyinRoomInfo]
 
 	if err := json.Unmarshal(resp.Bytes(), &result); err != nil {
