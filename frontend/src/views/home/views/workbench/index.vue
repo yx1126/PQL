@@ -18,8 +18,7 @@ const cardList = [
                 <template v-for="card, i in cardList" :key="i">
                     <div class="yj-card">
                         <div class="yj-card-title">
-                            <Icon :icon="card.icon" />
-                            <span>{{ card.title }}</span>
+                            <w-text :icon="card.icon">{{ card.title }}</w-text>
                         </div>
                     </div>
                 </template>
@@ -44,11 +43,6 @@ const cardList = [
         @extend .w-box;
         padding: var(--w-layout-space-large);
         line-height: 1;
-        &-title {
-            display: flex;
-            align-items: center;
-            gap: var(--w-layout-space);
-        }
     }
 }
 </style>

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"net/url"
 	"os/exec"
 	"pql/pkg/request"
 	"runtime"
@@ -116,4 +117,50 @@ func (s *AppService) RemoveStore(key string) error {
 
 func (s *AppService) ClearStore() error {
 	return s.Store.ClearStore()
+}
+
+func (s *AppService) StartBaiduAuth() error {
+
+	params := url.Values{}
+	params.Add("response_type", "token")
+	params.Add("client_id", "iV7sfG52vgnNTjPceUt2xCQNdfum6gJm")
+	params.Add("redirect_uri", "http://127.0.0.1:58080/baidu")
+	params.Add("scope", "basic,netdisk")
+
+	if err := s.App.Browser.OpenURL("https://openapi.baidu.com/oauth/2.0/authorize?" + params.Encode()); err != nil {
+		return err
+	}
+	// result := make(chan string, 1)
+	// mux := http.NewServeMux()
+	// server := &http.Server{Addr: "127.0.0.1:58080", Handler: mux}
+	// mux.HandleFunc("/baidu", func(w http.ResponseWriter, r *http.Request) {
+	// 	if r.Method != http.MethodGet {
+	// 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+	// 		return
+	// 	}
+	// 	code := r.URL.Query().Get("code")
+
+	// 	result <- code
+	// 	go server.Shutdown(context.Background())
+	// })
+	// errCh := make(chan error, 1)
+	// go func() {
+	// 	err := server.ListenAndServe()
+
+	// 	if err != nil && err != http.ErrServerClosed {
+	// 		errCh <- err
+	// 	}
+	// }()
+	// select {
+	// case code := <-result:
+	// 	return code, nil
+
+	// case err := <-errCh:
+	// 	return "", err
+
+	// case <-time.After(5 * time.Minute):
+	// 	_ = server.Shutdown(context.Background())
+	// 	return "", fmt.Errorf("等待授权超时")
+	// }
+	return nil
 }

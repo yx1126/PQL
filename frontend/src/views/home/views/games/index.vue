@@ -62,8 +62,7 @@ async function onToolClick(item: ToolItem) {
             <div class="games__list-footer">
                 <template v-for="tool in toolList" :key="tool.path">
                     <div class="tools-item" @click="onToolClick(tool)">
-                        <Icon :icon="tool.icon" />
-                        <span>{{ tool.name }}</span>
+                        <w-text :icon="tool.icon">{{ tool.name }}</w-text>
                     </div>
                 </template>
             </div>
@@ -207,10 +206,8 @@ async function onToolClick(item: ToolItem) {
             .tools-item {
                 display: flex;
                 align-items: center;
-                gap: 10px;
                 padding: 10px 15px;
                 cursor: pointer;
-                line-height: 1;
                 color: var(--w-text-color);
                 .el-icon {
                     font-size: 18px;

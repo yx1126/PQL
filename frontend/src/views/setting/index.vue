@@ -8,6 +8,7 @@ defineOptions({
 const Base = defineAsyncComponent(() => import("./components/Base.vue"));
 const About = defineAsyncComponent(() => import("./components/About.vue"));
 const Video = defineAsyncComponent(() => import("./components/Video.vue"));
+const CloudDrive = defineAsyncComponent(() => import("./components/CloudDrive.vue"));
 
 interface SetMenu {
     name: string;
@@ -23,6 +24,7 @@ const menuList: SetMenu[] = [
     { name: "通用设置", type: "base", icon: "ele-Setting", component: Base },
     { name: "界面设置", type: "ui", icon: "ele-Monitor" },
     { name: "视频设置", type: "video", icon: "ele-VideoCamera", component: Video },
+    { name: "网盘设置", type: "drive", icon: "cloud-drive", component: CloudDrive },
     { name: "下载设置", type: "download", icon: "ele-Download" },
     { name: "关于PQL", type: "about", icon: "ele-Warning", component: About },
 ];
@@ -54,7 +56,11 @@ function onTabClick(item: SetMenu) {
             </div>
         </template>
         <div class="setting-title">{{ current?.name }}</div>
-        <div class="w-box setting-box">
+        <div
+            :class="{
+                'setting-box w-box': !['drive'].includes(current?.type || '')
+            }"
+        >
             <keep-alive>
                 <component
                     :is="current?.component"

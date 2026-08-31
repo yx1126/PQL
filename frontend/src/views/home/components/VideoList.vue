@@ -45,7 +45,7 @@ function onSizeChange(value: number) {
     <div class="vl">
         <div class="vl-list">
             <el-empty v-if="data.length <= 0" class="size-full col-span-6" />
-            <template v-for="item, i in data" v-else :key="i">
+            <template v-for="item, i in data" v-else :key="jp.value(item, config?.primaryPath) || i">
                 <w-video
                     :title="jp.value(item, config?.namePath)"
                     :top="jp.value(item, config?.coverTopPath)"

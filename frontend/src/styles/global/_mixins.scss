@@ -1,9 +1,3 @@
-@mixin when-light {
-    @at-root html {
-        @content;
-    }
-}
-
 @mixin when-dark {
     @at-root html.dark & {
         @content;

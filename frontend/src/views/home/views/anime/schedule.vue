@@ -218,7 +218,7 @@ function onVideoClick(item: any) {
                     border-bottom-left-radius: var(--w-border-radius);
                     border-bottom-right-radius: var(--w-border-radius);
                     box-shadow:
-                        0 6px 18px rgba(255, 138, 0, 0.28),
+                        0 6px 18px color-mix(in oklab, var(--el-color-primary) 28%, transparent),
                         inset 0 1px 0 rgba(255, 255, 255, 0.25);
                 }
             }

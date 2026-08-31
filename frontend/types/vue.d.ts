@@ -18,14 +18,15 @@ declare module "vue" {
         Icon: typeof import("../src/components/GlobalRegister/Icon/Icon.vue")["default"];
         Pagination: typeof import("element-plus")["ElPagination"];
         // w-ui
+        WSiderMenu: typeof import("../src/components/WUI/components/WSiderMenu.vue")["default"];
+        WSiderLayout: typeof import("../src/components/WUI/components/WSiderLayout.vue")["default"];
+        WPlayerLayout: typeof import("../src/components/WUI/components/WPlayerLayout.vue")["default"];
         WBacktop: typeof import("../src/components/WUI/components/WBacktop.vue")["default"];
         WButton: typeof import("../src/components/WUI/components/WButton.vue")["default"];
         WImage: typeof import("../src/components/WUI/components/WImage.vue")["default"];
         WPaging: typeof import("../src/components/WUI/components/WPaging.vue")["default"];
         WVideo: typeof import("../src/components/WUI/components/WVideo.vue")["default"];
-        WSiderMenu: typeof import("../src/components/WUI/components/WSiderMenu.vue")["default"];
-        WSiderLayout: typeof import("../src/components/WUI/components/WSiderLayout.vue")["default"];
         WCard: typeof import("../src/components/WUI/components/WCard.vue")["default"];
-        WPlayerLayout: typeof import("../src/components/WUI/components/WPlayerLayout.vue")["default"];
+        WText: typeof import("../src/components/WUI/components/WText.vue")["default"];
     }
 }
