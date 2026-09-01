@@ -43,5 +43,18 @@ func (t *Time) Scan(value interface{}) error {
 		return nil
 	}
 
+	if val, ok := value.([]byte); ok {
+		v := string(val)
+		if v == "" {
+			return nil
+		}
+		tv, err := time.Parse(time.TimeOnly, v)
+		if err != nil {
+			return nil
+		}
+		*t = Time{Time: tv}
+		return nil
+	}
+
 	return errors.New("无法将值转换为时间戳")
 }

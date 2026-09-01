@@ -2,6 +2,7 @@
 defineOptions({
     name: "Workbench",
 });
+
 const cardList = [
     { title: "CPU", icon: "win-cpu" },
     { title: "GPU", icon: "win-gpu" },
@@ -42,7 +43,10 @@ const cardList = [
     .yj-card {
         @extend .w-box;
         padding: var(--w-layout-space-large);
-        line-height: 1;
+        &-title {
+            display: flex;
+            align-items: center;
+        }
     }
 }
 </style>

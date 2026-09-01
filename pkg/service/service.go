@@ -23,6 +23,7 @@ type ServiceContext struct {
 	Set    *ds.SettingService
 	Menu   *ds.MenuService
 	Store  *ds.StoreService
+	Auth   *ds.AuthService
 }
 
 func (sc *ServiceContext) open() error {
@@ -40,6 +41,7 @@ func (sc *ServiceContext) autoMigrate() {
 		&model.Setting{},
 		&model.Menu{},
 		&model.Store{},
+		&model.Auth{},
 	)
 }
 
@@ -79,6 +81,7 @@ func New(app *application.App, window *application.WebviewWindow) (*ServiceConte
 		Set:    ds.NewSettingService(ns, ctx),
 		Menu:   ds.NewMenuService(ns, ctx),
 		Store:  ds.NewStoreService(ns, ctx),
+		Auth:   ds.NewAuthService(ns, ctx),
 	}
 
 	if err := sc.open(); err != nil {

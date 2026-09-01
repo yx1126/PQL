@@ -99,7 +99,7 @@ function onTabClick(item: SetMenu) {
         align-items: center;
         padding: 0 12px;
         line-height: 1;
-        gap: 10px;
+        gap: var(--w-layout-space);
         cursor: pointer;
         border-radius: var(--w-border-radius);
         transition: background-color 0.3s var(--w-trans);

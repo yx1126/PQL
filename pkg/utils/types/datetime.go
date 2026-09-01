@@ -42,6 +42,18 @@ func (d *Datetime) Scan(value interface{}) error {
 		*d = Datetime{Time: val}
 		return nil
 	}
+	if val, ok := value.([]byte); ok {
+		v := string(val)
+		if v == "" {
+			return nil
+		}
+		t, err := time.Parse(time.DateTime, v)
+		if err != nil {
+			return nil
+		}
+		*d = Datetime{Time: t}
+		return nil
+	}
 
 	return errors.New("无法将值转换为时间戳")
 }

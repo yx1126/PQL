@@ -1,44 +1,54 @@
-<script setup lang="ts">
+<script lang="tsx">
 import WImage from "./WImage.vue";
 import { parseUnit } from "@/utils/unit";
-import type { VNode } from "vue";
+import type { PropType, SlotsType, VNode } from "vue";
 
-defineOptions({
+export default defineComponent({
     name: "WText",
+    props: {
+        type: { type: String as PropType<"icon" | "img">, default: "icon" },
+        icon: { type: String },
+        size: { type: [String, Number] as PropType<Unit>, default: 16 },
+        gap: { type: [String, Number] as PropType<Unit> },
+        reverse: { type: Boolean },
+    },
+    slots: Object as SlotsType<{
+        default?: () => VNode[];
+    }>,
+    setup(props, { slots }) {
+        function renderIcon() {
+            const { type, icon: ic } = props;
+            if(!ic) return null;
+            switch(type) {
+            case "icon":
+                return <icon class="w-text__icon" icon={ic} />;
+            case "img":
+                return <WImage class="w-text__icon" src={ic} />;
+            default:
+                return null;
+            }
+        }
+
+        return () => {
+            const { size, gap, reverse } = props;
+            const text = <span>{renderSlot(slots, "default")}</span>;
+            return (
+                <div
+                    class="w-text"
+                    style={{
+                        "--w-text-size": parseUnit(size),
+                        "--w-text-gap": parseUnit(gap),
+                    }}
+                >
+                    {reverse ? text : null}
+                    {renderIcon()}
+                    {!reverse ? text : null}
+                </div>
+            );
+        };
+    },
 });
-
-const {
-    type = "icon",
-    size = 16,
-} = defineProps<{
-    type?: "icon" | "img";
-    icon?: string;
-    size?: Unit;
-    gap?: Unit;
-    reverse?: boolean;
-}>();
-
-defineSlots<{
-    default?: () => VNode[];
-}>();
 </script>
-
-<template>
-    <div
-        class="w-text"
-        :style="{
-            '--w-text-size': parseUnit(size),
-            '--w-text-gap': parseUnit(gap),
-        }"
-    >
-        <span v-if="reverse"><slot /></span>
-        <template v-if="icon">
-            <Icon v-if="type === 'icon'" class="w-text__icon" :icon />
-            <w-image v-if="type === 'img'" class="w-text__img" :src="icon" />
-        </template>
-        <span v-if="!reverse"><slot /></span>
-    </div>
-</template>
 
 <style lang="scss" scoped>
 .w-text {

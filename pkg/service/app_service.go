@@ -7,9 +7,12 @@ import (
 	"net/url"
 	"os/exec"
 	"pql/pkg/request"
+	"pql/pkg/utils/types"
+	"pql/pkg/vo"
 	"runtime"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
@@ -119,48 +122,87 @@ func (s *AppService) ClearStore() error {
 	return s.Store.ClearStore()
 }
 
-func (s *AppService) StartBaiduAuth() error {
+func (s *AppService) StartBaiduAuth() (*types.BaiduDeviceRes, error) {
+	r := s.Http.R()
 
 	params := url.Values{}
-	params.Add("response_type", "token")
+	params.Add("response_type", "device_code")
 	params.Add("client_id", "iV7sfG52vgnNTjPceUt2xCQNdfum6gJm")
-	params.Add("redirect_uri", "http://127.0.0.1:58080/baidu")
 	params.Add("scope", "basic,netdisk")
+	params.Add("response_type", "device_code")
 
-	if err := s.App.Browser.OpenURL("https://openapi.baidu.com/oauth/2.0/authorize?" + params.Encode()); err != nil {
-		return err
+	r.SetQueryParamsFromValues(params)
+
+	r.SetHeader("User-Agent", "pan.baidu.com")
+
+	resp, err := r.Get("https://openapi.baidu.com/oauth/2.0/device/code")
+	if err != nil {
+		return nil, err
 	}
-	// result := make(chan string, 1)
-	// mux := http.NewServeMux()
-	// server := &http.Server{Addr: "127.0.0.1:58080", Handler: mux}
-	// mux.HandleFunc("/baidu", func(w http.ResponseWriter, r *http.Request) {
-	// 	if r.Method != http.MethodGet {
-	// 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-	// 		return
-	// 	}
-	// 	code := r.URL.Query().Get("code")
 
-	// 	result <- code
-	// 	go server.Shutdown(context.Background())
-	// })
-	// errCh := make(chan error, 1)
-	// go func() {
-	// 	err := server.ListenAndServe()
+	var result types.BaiduDeviceRes
+	if err != json.Unmarshal(resp.Bytes(), &result) {
+		return nil, err
+	}
 
-	// 	if err != nil && err != http.ErrServerClosed {
-	// 		errCh <- err
-	// 	}
-	// }()
-	// select {
-	// case code := <-result:
-	// 	return code, nil
+	return &result, nil
+}
 
-	// case err := <-errCh:
-	// 	return "", err
+func (s *AppService) GetAuthList() []vo.AuthVo {
+	return s.Auth.GetAuthListist()
+}
 
-	// case <-time.After(5 * time.Minute):
-	// 	_ = server.Shutdown(context.Background())
-	// 	return "", fmt.Errorf("等待授权超时")
-	// }
-	return nil
+func (s *AppService) GetAuth(typee string) (*vo.AuthVo, error) {
+	return s.Auth.GetAuth(typee)
+}
+
+func (s *AppService) getBaiduTokens(params url.Values) (*types.BaiduTokenRes, error) {
+	r := s.Http.R()
+
+	r.SetQueryParamsFromValues(params)
+
+	baseParams := url.Values{}
+	baseParams.Add("client_id", "iV7sfG52vgnNTjPceUt2xCQNdfum6gJm")
+	baseParams.Add("client_secret", "28Q3eRQjJwtbRrjBpvAIqeFaOJCylUXG")
+	r.SetQueryParamsFromValues(baseParams)
+
+	r.SetHeader("User-Agent", "pan.baidu.com")
+
+	resp, err := r.Get("https://openapi.baidu.com/oauth/2.0/token")
+	if err != nil {
+		return nil, err
+	}
+
+	var result types.BaiduTokenRes
+	if err != json.Unmarshal(resp.Bytes(), &result) {
+		return nil, err
+	}
+	time.Now().Format(time.DateTime)
+	if err := s.Auth.SaveAuth(vo.SaveAuthVo{
+		BaseAuth: vo.BaseAuth{
+			Type:         "baidu",
+			Token:        result.AccessToken,
+			ExpiresIn:    result.ExpiresIn,
+			ExpiresTime:  time.Now().Add(time.Duration(result.ExpiresIn)).Format(time.DateTime),
+			RefreshToken: result.RefreshToken,
+			Scope:        result.Scope,
+		},
+	}); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (s *AppService) GetBaiduToken(code string) (*types.BaiduTokenRes, error) {
+	params := url.Values{}
+	params.Add("grant_type", "device_token")
+	params.Add("code", code)
+	return s.getBaiduTokens(params)
+}
+
+func (s *AppService) RefreshBaiduToken(typee, refreshToken string) (*types.BaiduTokenRes, error) {
+	params := url.Values{}
+	params.Add("grant_type", "refresh_token")
+	params.Add("refresh_token", refreshToken)
+	return s.getBaiduTokens(params)
 }

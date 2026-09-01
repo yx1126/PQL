@@ -5,6 +5,18 @@
 // @ts-ignore: Unused imports
 import * as types$0 from "../utils/types/models.js";
 
+export interface AuthVo {
+    "type": string;
+    "token": string;
+    "expires_in": number;
+    "expires_time": string;
+    "refresh_token": string;
+    "scope": string;
+    "id": number;
+    "createdAt": types$0.Datetime;
+    "updatedAt": types$0.Datetime;
+}
+
 export interface CreateLiveVo {
     "roomId": string;
     "type": string;

@@ -11,10 +11,6 @@ import (
 
 type H map[string]any
 
-type HttpDefaults struct {
-	headers map[string]string
-}
-
 type HttpUrlConfig struct {
 	Url    string `json:"url"`
 	Method string `json:"method"`
