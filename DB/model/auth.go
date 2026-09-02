@@ -1,7 +1,9 @@
 package model
 
 type Auth struct {
+	Name         string `json:"name"`
 	Type         string `json:"type" gorm:"uniqueIndex"`
+	Icon         string `json:"icon"`
 	Token        string `json:"token"`
 	ExpiresIn    int    `json:"expires_in"`
 	ExpiresTime  string `json:"expires_time"`
@@ -11,5 +13,5 @@ type Auth struct {
 }
 
 func (*Auth) TableName() string {
-	return "user_third_auth"
+	return "user_auth"
 }

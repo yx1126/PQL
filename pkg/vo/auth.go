@@ -3,7 +3,9 @@ package vo
 import "pql/DB/model"
 
 type BaseAuth struct {
+	Name         string `json:"name"`
 	Type         string `json:"type"`
+	Icon         string `json:"icon"`
 	Token        string `json:"token"`
 	ExpiresIn    int    `json:"expires_in"`
 	ExpiresTime  string `json:"expires_time"`

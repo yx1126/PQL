@@ -15,3 +15,8 @@ type BaiduTokenRes struct {
 	RefreshToken string `json:"refresh_token"`
 	Scope        string `json:"scope"`
 }
+
+type BaiduAuthError struct {
+	Error            string `json:"error"`
+	ErrorDescription string `json:"error_description"`
+}

@@ -137,6 +137,12 @@ func New(app *application.App, window *application.WebviewWindow) (*ServiceConte
 			Name: "Live",
 		},
 	))
+	app.RegisterService(application.NewServiceWithOptions(
+		NewDriveService(sc),
+		application.ServiceOptions{
+			Name: "Drive",
+		},
+	))
 
 	return sc, nil
 }

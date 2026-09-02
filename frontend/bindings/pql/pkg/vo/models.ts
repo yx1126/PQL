@@ -6,7 +6,9 @@
 import * as types$0 from "../utils/types/models.js";
 
 export interface AuthVo {
+    "name": string;
     "type": string;
+    "icon": string;
     "token": string;
     "expires_in": number;
     "expires_time": string;

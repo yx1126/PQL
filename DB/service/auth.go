@@ -21,15 +21,29 @@ func NewAuthService(db *DB.Sqlite, ctx context.Context) *AuthService {
 	}
 }
 
-func (s *AuthService) GetAuthListist() []vo.AuthVo {
+func (a *AuthService) Init() error {
+	var count int64
+	a.db.WithContext(a.ctx).Model(&model.Auth{}).Count(&count)
+	if count <= 0 {
+		auths := []model.Auth{
+			{Name: "百度网盘", Type: "baidu", Icon: "baidu"},
+		}
+		if err := a.db.WithContext(a.ctx).Model(&model.Auth{}).Create(&auths).Error; err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (a *AuthService) GetAuthListist() []vo.AuthVo {
 	var authList = make([]vo.AuthVo, 0)
-	s.db.WithContext(s.ctx).Model(&model.Auth{}).Select("*").Find(&authList)
+	a.db.WithContext(a.ctx).Model(&model.Auth{}).Select("*").Find(&authList)
 	return authList
 }
 
-func (s *AuthService) GetAuth(typee string) (*vo.AuthVo, error) {
+func (a *AuthService) GetAuth(typee string) (*vo.AuthVo, error) {
 	var auth vo.AuthVo
-	if err := s.db.WithContext(s.ctx).
+	if err := a.db.WithContext(a.ctx).
 		Model(&model.Auth{}).
 		Where("type = ?", typee).
 		Take(&auth).Error; err != nil {
@@ -38,8 +52,8 @@ func (s *AuthService) GetAuth(typee string) (*vo.AuthVo, error) {
 	return &auth, nil
 }
 
-func (s *AuthService) SaveAuth(auth vo.SaveAuthVo) error {
-	result := s.db.WithContext(s.ctx).
+func (a *AuthService) SaveAuth(auth vo.SaveAuthVo) error {
+	result := a.db.WithContext(a.ctx).
 		Model(&model.Auth{}).
 		Clauses(clause.OnConflict{
 			Columns: []clause.Column{{Name: "type"}},
@@ -62,10 +76,15 @@ func (s *AuthService) SaveAuth(auth vo.SaveAuthVo) error {
 	return result.Error
 }
 
-func (s *AuthService) DeleteStore(typee string) error {
-	return s.db.WithContext(s.ctx).
-		Model(&model.Auth{}).
-		Unscoped().
-		Where("type = ?", typee).
-		Delete(&model.Auth{}).Error
+func (a *AuthService) DeleteAuth(typee string) error {
+	return a.SaveAuth(vo.SaveAuthVo{
+		BaseAuth: vo.BaseAuth{
+			Type:         typee,
+			Token:        "",
+			ExpiresIn:    0,
+			ExpiresTime:  "",
+			RefreshToken: "",
+			Scope:        "",
+		},
+	})
 }
