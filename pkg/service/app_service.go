@@ -4,15 +4,11 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"net/url"
 	"os/exec"
 	"pql/pkg/request"
-	"pql/pkg/utils/types"
-	"pql/pkg/vo"
 	"runtime"
 	"strings"
 	"syscall"
-	"time"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
@@ -120,89 +116,4 @@ func (s *AppService) RemoveStore(key string) error {
 
 func (s *AppService) ClearStore() error {
 	return s.Store.ClearStore()
-}
-
-func (s *AppService) StartBaiduAuth() (*types.BaiduDeviceRes, error) {
-	r := s.Http.R()
-
-	params := url.Values{}
-	params.Add("response_type", "device_code")
-	params.Add("client_id", "iV7sfG52vgnNTjPceUt2xCQNdfum6gJm")
-	params.Add("scope", "basic,netdisk")
-	params.Add("response_type", "device_code")
-
-	r.SetQueryParamsFromValues(params)
-
-	r.SetHeader("User-Agent", "pan.baidu.com")
-
-	resp, err := r.Get("https://openapi.baidu.com/oauth/2.0/device/code")
-	if err != nil {
-		return nil, err
-	}
-
-	var result types.BaiduDeviceRes
-	if err != json.Unmarshal(resp.Bytes(), &result) {
-		return nil, err
-	}
-
-	return &result, nil
-}
-
-func (s *AppService) GetAuthList() []vo.AuthVo {
-	return s.Auth.GetAuthListist()
-}
-
-func (s *AppService) GetAuth(typee string) (*vo.AuthVo, error) {
-	return s.Auth.GetAuth(typee)
-}
-
-func (s *AppService) getBaiduTokens(params url.Values) (*types.BaiduTokenRes, error) {
-	r := s.Http.R()
-
-	r.SetQueryParamsFromValues(params)
-
-	baseParams := url.Values{}
-	baseParams.Add("client_id", "iV7sfG52vgnNTjPceUt2xCQNdfum6gJm")
-	baseParams.Add("client_secret", "28Q3eRQjJwtbRrjBpvAIqeFaOJCylUXG")
-	r.SetQueryParamsFromValues(baseParams)
-
-	r.SetHeader("User-Agent", "pan.baidu.com")
-
-	resp, err := r.Get("https://openapi.baidu.com/oauth/2.0/token")
-	if err != nil {
-		return nil, err
-	}
-
-	var result types.BaiduTokenRes
-	if err != json.Unmarshal(resp.Bytes(), &result) {
-		return nil, err
-	}
-	time.Now().Format(time.DateTime)
-	if err := s.Auth.SaveAuth(vo.SaveAuthVo{
-		BaseAuth: vo.BaseAuth{
-			Type:         "baidu",
-			Token:        result.AccessToken,
-			ExpiresIn:    result.ExpiresIn,
-			ExpiresTime:  time.Now().Add(time.Duration(result.ExpiresIn)).Format(time.DateTime),
-			RefreshToken: result.RefreshToken,
-			Scope:        result.Scope,
-		},
-	}); err != nil {
-		return nil, err
-	}
-	return &result, nil
-}
-
-func (s *AppService) GetBaiduToken(code string) (*types.BaiduTokenRes, error) {
-	params := url.Values{}
-	params.Add("grant_type", "device_token")
-	params.Add("code", code)
-	return s.getBaiduTokens(params)
-}
-
-func (s *AppService) RefreshBaiduToken(typee, refreshToken string) (*types.BaiduTokenRes, error) {
-	params := url.Values{}
-	params.Add("grant_type", "refresh_token")
-	params.Add("refresh_token", refreshToken)
-	return s.getBaiduTokens(params)
 }

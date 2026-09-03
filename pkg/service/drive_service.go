@@ -5,8 +5,9 @@ import (
 	"encoding/json"
 	"errors"
 	"net/url"
-	"pql/pkg/utils/types"
+	clouddirve "pql/pkg/cloud_dirve"
 	"pql/pkg/vo"
+	"sync"
 	"time"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
@@ -14,11 +15,13 @@ import (
 
 type DriveService struct {
 	*ServiceContext
+	baidu *clouddirve.BaiduDrive
 }
 
 func NewDriveService(sc *ServiceContext) *DriveService {
 	return &DriveService{
 		ServiceContext: sc,
+		baidu:          clouddirve.NewBaidu(sc.Http, sc.Auth),
 	}
 }
 
@@ -27,6 +30,7 @@ func (a *DriveService) ServiceStartup(ctx context.Context, options application.S
 	if err := a.Auth.Init(); err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -35,7 +39,7 @@ func (a *DriveService) ServiceShutdown() error {
 	return nil
 }
 
-func (s *DriveService) StartBaiduAuth() (*types.BaiduDeviceRes, error) {
+func (s *DriveService) StartBaiduAuth() (*clouddirve.BaiduDeviceRes, error) {
 	r := s.Http.R()
 
 	params := url.Values{}
@@ -53,7 +57,7 @@ func (s *DriveService) StartBaiduAuth() (*types.BaiduDeviceRes, error) {
 		return nil, err
 	}
 
-	var result types.BaiduDeviceRes
+	var result clouddirve.BaiduDeviceRes
 	if err != json.Unmarshal(resp.Bytes(), &result) {
 		return nil, err
 	}
@@ -61,71 +65,69 @@ func (s *DriveService) StartBaiduAuth() (*types.BaiduDeviceRes, error) {
 	return &result, nil
 }
 
-func (s *DriveService) GetAuthList() []vo.AuthVo {
-	return s.Auth.GetAuthListist()
+func (s *DriveService) GetAuthList() ([]vo.AuthVo, error) {
+	res := s.Auth.GetAuthListist()
+	var errs []error
+	var wg sync.WaitGroup
+	for i, v := range res {
+		wg.Go(func() {
+			if v.IsAuth() && v.Type == "baidu" {
+				bd, err := s.baidu.GetInfo()
+				if err != nil {
+					errs = append(errs, err)
+				} else {
+					res[i].Avatar = bd.AvatarUrl
+					res[i].DriveId = bd.Uk
+					res[i].Username = bd.BaiduName
+					res[i].Nickname = bd.NetdiskName
+					res[i].VipType = bd.VipType
+				}
+			}
+		})
+	}
+	wg.Wait()
+	if len(errs) > 0 {
+		return nil, errors.Join(errs...)
+	}
+	return res, nil
 }
 
-func (s *DriveService) GetAuth(typee string) (*vo.AuthVo, error) {
-	return s.Auth.GetAuth(typee)
+// 保存授权信息
+func (s *DriveService) saveBaiduAuth(res *clouddirve.BaiduTokenRes) error {
+	return s.Auth.SaveAuth(vo.SaveAuthVo{
+		BaseAuth: vo.BaseAuth{
+			Type:         "baidu",
+			Token:        res.Token,
+			ExpiresIn:    res.ExpiresIn,
+			ExpiresTime:  time.Now().Add(time.Second * time.Duration(res.ExpiresIn)).Format(time.DateTime),
+			RefreshToken: res.RefreshToken,
+			Scope:        res.Scope,
+		},
+	})
 }
 
-func (s *DriveService) getBaiduTokens(params url.Values) (*types.BaiduTokenRes, error) {
-	r := s.Http.R()
-
-	r.SetQueryParamsFromValues(params)
-
-	baseParams := url.Values{}
-	baseParams.Add("client_id", "iV7sfG52vgnNTjPceUt2xCQNdfum6gJm")
-	baseParams.Add("client_secret", "28Q3eRQjJwtbRrjBpvAIqeFaOJCylUXG")
-	r.SetQueryParamsFromValues(baseParams)
-
-	r.SetHeader("User-Agent", "pan.baidu.com")
-
-	resp, err := r.Get("https://openapi.baidu.com/oauth/2.0/token")
+// 获取百度token授权
+func (s *DriveService) GetBaiduToken(code string) (*clouddirve.BaiduTokenRes, error) {
+	res, err := s.baidu.GetAuthToken(code)
 	if err != nil {
 		return nil, err
 	}
-
-	if resp.StatusCode() != 200 {
-		var baiduErr types.BaiduAuthError
-		if err != json.Unmarshal(resp.Bytes(), &baiduErr) {
-			return nil, err
-		}
-		return nil, errors.New(baiduErr.ErrorDescription)
-	}
-
-	var result types.BaiduTokenRes
-	if err != json.Unmarshal(resp.Bytes(), &result) {
+	if err := s.saveBaiduAuth(res); err != nil {
 		return nil, err
 	}
-	time.Now().Format(time.DateTime)
-	if err := s.Auth.SaveAuth(vo.SaveAuthVo{
-		BaseAuth: vo.BaseAuth{
-			Type:         "baidu",
-			Token:        result.AccessToken,
-			ExpiresIn:    result.ExpiresIn,
-			ExpiresTime:  time.Now().Add(time.Second * time.Duration(result.ExpiresIn)).Format(time.DateTime),
-			RefreshToken: result.RefreshToken,
-			Scope:        result.Scope,
-		},
-	}); err != nil {
+	return res, nil
+}
+
+// 刷新百度授权
+func (s *DriveService) RefreshBaiduToken(refreshToken string) (*clouddirve.BaiduTokenRes, error) {
+	res, err := s.baidu.RefreshAuthToken(refreshToken)
+	if err != nil {
 		return nil, err
 	}
-	return &result, nil
-}
-
-func (s *DriveService) GetBaiduToken(code string) (*types.BaiduTokenRes, error) {
-	params := url.Values{}
-	params.Add("grant_type", "device_token")
-	params.Add("code", code)
-	return s.getBaiduTokens(params)
-}
-
-func (s *DriveService) RefreshBaiduToken(typee, refreshToken string) (*types.BaiduTokenRes, error) {
-	params := url.Values{}
-	params.Add("grant_type", "refresh_token")
-	params.Add("refresh_token", refreshToken)
-	return s.getBaiduTokens(params)
+	if err := s.saveBaiduAuth(res); err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 func (s *DriveService) UnBindBaidu(typee string) error {

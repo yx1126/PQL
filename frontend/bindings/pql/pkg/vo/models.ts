@@ -15,6 +15,10 @@ export interface AuthVo {
     "refresh_token": string;
     "scope": string;
     "id": number;
+    "avatar": string;
+    "username": string;
+    "nickname": string;
+    "vip_type": number;
     "createdAt": types$0.Datetime;
     "updatedAt": types$0.Datetime;
 }

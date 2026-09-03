@@ -1,6 +1,7 @@
 package request
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"strings"
@@ -28,11 +29,13 @@ type HttpRequestConfig struct {
 }
 
 type Http struct {
+	ctx   context.Context
 	resty *resty.Client
 }
 
-func New() *Http {
+func New(ctx context.Context) *Http {
 	return &Http{
+		ctx:   ctx,
 		resty: resty.New(),
 	}
 }
@@ -54,7 +57,7 @@ func (h *Http) Request(config HttpRequestConfig) (*resty.Response, error) {
 		method = http.MethodGet
 	}
 
-	r := h.resty.R()
+	r := h.R()
 
 	if config.Params != nil {
 		for k, v := range config.Params {
@@ -84,7 +87,7 @@ func (h *Http) Request(config HttpRequestConfig) (*resty.Response, error) {
 }
 
 func (h *Http) R() *resty.Request {
-	return h.resty.R()
+	return h.resty.R().SetContext(h.ctx)
 }
 
 func (h *Http) Close() error {
@@ -92,7 +95,7 @@ func (h *Http) Close() error {
 }
 
 func (h *Http) Get(url string) (*resty.Response, error) {
-	return h.resty.R().Get(url)
+	return h.R().Get(url)
 }
 
 func (h *Http) GetConfig(url string, config HttpConfig) (*resty.Response, error) {
@@ -106,7 +109,7 @@ func (h *Http) GetConfig(url string, config HttpConfig) (*resty.Response, error)
 }
 
 func (h *Http) Post(url string) (*resty.Response, error) {
-	return h.resty.R().Post(url)
+	return h.R().Post(url)
 }
 
 func (h *Http) PostConfig(url string, config HttpConfig) (*resty.Response, error) {

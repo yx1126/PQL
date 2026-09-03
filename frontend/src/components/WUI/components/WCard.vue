@@ -3,30 +3,45 @@ defineOptions({
     name: "WCard",
 });
 
-defineProps<{
+const {
+    showBody = true,
+} = defineProps<{
     title?: string;
     description?: string;
     isList?: boolean;
     hover?: boolean;
+    border?: boolean;
+    showBody?: boolean;
 }>();
 
-defineSlots<{
+const slots = defineSlots<{
     default?: () => VNode[];
+    header?: () => VNode[];
     extra?: () => VNode[];
 }>();
 </script>
 
 <template>
-    <div class="w-card" :class="{ 'is-hover': hover }">
-        <div v-if="title" class="w-card__title">
-            <div>{{ title }}</div>
+    <div
+        class="w-card"
+        :class="{
+            'is-hover': hover,
+        }"
+    >
+        <div v-if="title || slots.header || slots.extra" class="w-card__header">
+            <div>
+                <slot name="header">{{ title }}</slot>
+            </div>
             <div class="w-card__extra">
                 <slot name="extra" />
             </div>
         </div>
-        <div :class="`w-card__${isList ? 'list' : 'desc'}`">
-            <slot>{{ description }}</slot>
-        </div>
+        <template v-if="showBody">
+            <el-divider v-if="border" />
+            <div :class="`w-card__${isList ? 'list' : 'desc'}`">
+                <slot>{{ description }}</slot>
+            </div>
+        </template>
     </div>
 </template>
 
@@ -35,24 +50,25 @@ defineSlots<{
 .w-card {
     padding: var(--w-layout-space-large);
     @extend .w-box;
-    &__title {
-        margin-bottom: 10px;
+    &__header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-    }
-    &__extra {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--w-layout-space);
+        & > div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--w-layout-space);
+        }
     }
     &__list {
         display: flex;
         flex-wrap: wrap;
         gap: var(--w-layout-space-large);
+        margin-top: 10px;
     }
     &__desc {
+        margin-top: 10px;
         width: 100%;
         min-width: 0;
         font-size: 14px;

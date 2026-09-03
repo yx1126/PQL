@@ -5,12 +5,13 @@ go 1.26
 require (
 	github.com/chromedp/cdproto v0.0.0-20260804232424-e85f50dbfd32
 	github.com/chromedp/chromedp v0.16.0
-	github.com/dop251/goja v0.0.0-20260806115107-493f22071ef6
+	github.com/dop251/goja v0.0.0-20260901132549-43234fa61381
 	github.com/glebarez/sqlite v1.11.0
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/rs/zerolog v1.35.1
 	github.com/wailsapp/wails/v3 v3.0.0-beta.16
-	gorm.io/gorm v1.31.1
+	golang.org/x/sync v0.22.0
+	gorm.io/gorm v1.31.2
 	resty.dev/v3 v3.0.0-rc.3
 )
 
@@ -37,10 +38,10 @@ require (
 	github.com/mattn/go-isatty v0.0.24 // indirect
 	github.com/ncruces/go-strftime v1.0.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
-	golang.org/x/image v0.41.0 // indirect
+	golang.org/x/image v0.45.0 // indirect
 	golang.org/x/net v0.56.0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
-	golang.org/x/text v0.39.0 // indirect
+	golang.org/x/text v0.41.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	modernc.org/libc v1.73.4 // indirect
 	modernc.org/mathutil v1.7.1 // indirect

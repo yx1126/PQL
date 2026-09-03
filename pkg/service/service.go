@@ -56,16 +56,15 @@ func (sc *ServiceContext) Close() error {
 }
 
 func New(app *application.App, window *application.WebviewWindow) (*ServiceContext, error) {
+	// context
+	ctx := app.Context()
 
 	// http
-	http := request.New()
+	http := request.New(ctx)
 	http.SetTimeout(2 * time.Minute)
 
 	// db
 	ns := DB.New(app)
-
-	// context
-	ctx := app.Context()
 
 	// ServiceContext
 	sc := &ServiceContext{

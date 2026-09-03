@@ -11,12 +11,6 @@ import * as application$0 from "../../../github.com/wailsapp/wails/v3/pkg/applic
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore: Unused imports
 import * as request$0 from "../request/models.js";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore: Unused imports
-import * as types$0 from "../utils/types/models.js";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore: Unused imports
-import * as vo$0 from "../vo/models.js";
 
 export function AutoStartStatus(): $CancellablePromise<application$0.AutostartStatus> {
     return $Call.ByID(160064592);
@@ -34,18 +28,6 @@ export function DisableOnWindow(): $CancellablePromise<void> {
     return $Call.ByID(4180048058);
 }
 
-export function GetAuth(typee: string): $CancellablePromise<vo$0.AuthVo | null> {
-    return $Call.ByID(3425905177, typee);
-}
-
-export function GetAuthList(): $CancellablePromise<vo$0.AuthVo[] | null> {
-    return $Call.ByID(939518853);
-}
-
-export function GetBaiduToken(code: string): $CancellablePromise<types$0.BaiduTokenRes | null> {
-    return $Call.ByID(3765610827, code);
-}
-
 export function GetDarkMode(): $CancellablePromise<boolean> {
     return $Call.ByID(968943232);
 }
@@ -61,10 +43,6 @@ export function HasHEVCExtension(): $CancellablePromise<boolean> {
     return $Call.ByID(1839878488);
 }
 
-export function RefreshBaiduToken(typee: string, refreshToken: string): $CancellablePromise<types$0.BaiduTokenRes | null> {
-    return $Call.ByID(975385856, typee, refreshToken);
-}
-
 export function RemoveStore(key: string): $CancellablePromise<void> {
     return $Call.ByID(947968190, key);
 }
@@ -75,10 +53,6 @@ export function Request(config: request$0.HttpRequestConfig): $CancellablePromis
 
 export function SetStore(key: string, value: string): $CancellablePromise<void> {
     return $Call.ByID(3973503364, key, value);
-}
-
-export function StartBaiduAuth(): $CancellablePromise<types$0.BaiduDeviceRes | null> {
-    return $Call.ByID(1637790412);
 }
 
 export function StartOnWindow(): $CancellablePromise<void> {

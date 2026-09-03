@@ -7,7 +7,7 @@ import { Call as $Call, CancellablePromise as $CancellablePromise } from "@wails
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore: Unused imports
-import * as types$0 from "../utils/types/models.js";
+import * as clouddirve$0 from "../cloud_dirve/models.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore: Unused imports
 import * as vo$0 from "../vo/models.js";
@@ -16,23 +16,25 @@ export function Close(): $CancellablePromise<void> {
     return $Call.ByID(680995866);
 }
 
-export function GetAuth(typee: string): $CancellablePromise<vo$0.AuthVo | null> {
-    return $Call.ByID(2489757808, typee);
-}
-
 export function GetAuthList(): $CancellablePromise<vo$0.AuthVo[] | null> {
     return $Call.ByID(2223579352);
 }
 
-export function GetBaiduToken(code: string): $CancellablePromise<types$0.BaiduTokenRes | null> {
+/**
+ * 获取百度token授权
+ */
+export function GetBaiduToken(code: string): $CancellablePromise<clouddirve$0.BaiduTokenRes | null> {
     return $Call.ByID(1332747998, code);
 }
 
-export function RefreshBaiduToken(typee: string, refreshToken: string): $CancellablePromise<types$0.BaiduTokenRes | null> {
-    return $Call.ByID(1565687849, typee, refreshToken);
+/**
+ * 刷新百度授权
+ */
+export function RefreshBaiduToken(refreshToken: string): $CancellablePromise<clouddirve$0.BaiduTokenRes | null> {
+    return $Call.ByID(1565687849, refreshToken);
 }
 
-export function StartBaiduAuth(): $CancellablePromise<types$0.BaiduDeviceRes | null> {
+export function StartBaiduAuth(): $CancellablePromise<clouddirve$0.BaiduDeviceRes | null> {
     return $Call.ByID(43454943);
 }
 
