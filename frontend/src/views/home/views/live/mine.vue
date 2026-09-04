@@ -11,11 +11,20 @@ defineOptions({
     name: "LiveMine",
 });
 
-const LiveDialog = defineAsyncComponent(() => import("./components/LiveDialog.vue"));
+const {
+    type = "",
+    isSpecial = "",
+} = defineProps<{
+    type?: string;
+    isSpecial?: string;
+    title?: string;
+}>();
 
-const liveDialogRef = useTemplateRef("liveDialogRef");
 const msgBox = useMessageBox();
+const route = useRoute();
 const set = useSetStore();
+const keepalive = useMitt("keepalive");
+const livelistener = useMitt("live:data:refresh");
 
 const showTypeList = [
     { label: "全部", value: "all" },
@@ -24,49 +33,41 @@ const showTypeList = [
 ];
 
 const { data, query } = useService({
-    request: LiveService.GetLiveList,
+    request: () => LiveService.GetLiveList({ isSpecial: isSpecial, type: type }),
     default: [],
     immediate: true,
     isLayoutLoad: true,
 });
 
 const liveData = computed(() => {
-    const { liveShowType: lst, liveSpecialShowType: lsst } = set;
+    const { liveShowType: lst } = set;
     return data.value.reduce((pre, item) => {
-        if(item.isSpecial == 1) {
-            pre.specialSource.push(item);
-            switch(lsst) {
-            case "live":
-                if(item.isLive) pre.special.push(item);
-                break;
-            case "nolive":
-                if(!item.isLive) pre.special.push(item);
-                break;
-            default:
-                pre.special.push(item);
-                break;
-            }
-        } else {
-            pre.dataSource.push(item);
-            switch(lst) {
-            case "live":
-                if(item.isLive) pre.data.push(item);
-                break;
-            case "nolive":
-                if(!item.isLive) pre.data.push(item);
-                break;
-            default:
-                pre.data.push(item);
-                break;
-            }
+        pre.dataSource.push(item);
+        switch(lst) {
+        case "live":
+            if(item.isLive) pre.data.push(item);
+            break;
+        case "nolive":
+            if(!item.isLive) pre.data.push(item);
+            break;
+        default:
+            pre.data.push(item);
+            break;
         }
         return pre;
     }, {
-        special: [],
-        specialSource: [],
         data: [],
         dataSource: [],
-    } as Record<"special" | "data" | `${"special" | "data"}Source`, LiveVo[]>);
+    } as Record<"data" | "dataSource", LiveVo[]>);
+});
+
+const routeName = route.name;
+onBeforeMount(() => {
+    livelistener.on(name => {
+        if(routeName === name) {
+            query();
+        }
+    });
 });
 
 function onLiveClick(live: LiveVo) {
@@ -85,16 +86,18 @@ function onLiveClick(live: LiveVo) {
 
 async function onCommand(type: string, data: LiveVo) {
     if(type === "special" || type === "no-special") {
+        const isSpecial = type === "special" ? 1 : 0;
         await LiveService.UpdateLive({
             id: data.id,
             sort: null,
-            isSpecial: type === "special" ? 1 : 0,
+            isSpecial,
         });
-        query();
+        keepalive.emit("LiveMine");
+        data.isSpecial = isSpecial;
         return;
     }
     if(type === "care") {
-        msgBox.confirm("确认要取消关注吗？").then(async () => {
+        msgBox.confirm("确认要删除吗？").then(async () => {
             if(data?.id) await LiveService.DeleteLive([data.id]);
             query();
         });
@@ -113,47 +116,24 @@ async function onCommand(type: string, data: LiveVo) {
 
 <template>
     <div id="liveListTarget" class="mine">
-        <div class="mine-header w-box">
-            <el-button-group>
-                <el-button type="primary" icon="ele-Plus" @click="liveDialogRef?.open()">添加</el-button>
-                <!-- <el-button type="primary" icon="grid" /> -->
-            </el-button-group>
-        </div>
-        <w-card v-if="liveData.specialSource.length > 0" title="特别关注">
-            <template #extra>
-                <el-segmented v-model="set.liveSpecialShowType" class="is-rounded" :options="showTypeList" size="small" />
-            </template>
-            <div v-if="liveData.special.length > 0" class="live-list">
-                <template v-for="live in liveData.special" :key="live.roomId">
-                    <live-card :data="live" @click="onLiveClick(live)" @command="onCommand">
-                        <template #dropdown>
-                            <el-dropdown-item command="no-special" :icon="renderIcon('heart')">取消特别</el-dropdown-item>
-                            <el-dropdown-item command="care" :icon="renderIcon('heart')">取消关注</el-dropdown-item>
-                            <el-dropdown-item command="copy" icon="ele-CopyDocument">复制房号</el-dropdown-item>
-                            <el-dropdown-item command="web" :icon="renderIcon('pc')">打开网页</el-dropdown-item>
-                        </template>
-                    </live-card>
-                </template>
-            </div>
-            <el-empty v-else class="h-[160px]" :image-size="80" />
-        </w-card>
-        <w-card title="关注">
+        <w-card :title="title">
             <template #extra>
                 <el-segmented v-model="set.liveShowType" class="is-rounded" :options="showTypeList" size="small" />
             </template>
-            <div v-if="liveData.dataSource.length > 0" class="live-list">
+            <div v-if="liveData.data.length > 0" class="live-list">
                 <template v-for="live in liveData.data" :key="live.roomId">
                     <live-card :data="live" @click="onLiveClick(live)" @command="onCommand">
                         <template #dropdown>
-                            <el-dropdown-item command="special" :icon="renderIcon('heart-fill')">特别关注</el-dropdown-item>
-                            <el-dropdown-item command="care" :icon="renderIcon('heart')">取消关注</el-dropdown-item>
+                            <el-dropdown-item v-if="live.isSpecial == 0" command="special" :icon="renderIcon('heart')">关注</el-dropdown-item>
+                            <el-dropdown-item v-else command="no-special" :icon="renderIcon('heart-fill')">取消关注</el-dropdown-item>
                             <el-dropdown-item command="copy" icon="ele-CopyDocument">复制房号</el-dropdown-item>
                             <el-dropdown-item command="web" :icon="renderIcon('pc')">打开网页</el-dropdown-item>
+                            <el-dropdown-item command="care" icon="ele-Delete">删除</el-dropdown-item>
                         </template>
                     </live-card>
                 </template>
             </div>
-            <el-empty v-else class="h-[160px]" :image-size="80" />
+            <el-empty v-else class="h-full" :image-size="80" />
         </w-card>
         <w-backtop
             target="#liveListTarget"
@@ -161,7 +141,6 @@ async function onCommand(type: string, data: LiveVo) {
             :bottom="20"
             @refresh="query"
         />
-        <live-dialog ref="liveDialogRef" @success="query" />
     </div>
 </template>
 

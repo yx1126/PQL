@@ -5,6 +5,7 @@ export type {
     AuthVo,
     CreateLiveVo,
     GameVo,
+    LiveParams,
     LiveSearchVo,
     LiveVo,
     MenuVo,

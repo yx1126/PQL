@@ -28,8 +28,8 @@ export function GetLiveInfo(roomId: string, roomtype: string): $CancellablePromi
     return $Call.ByID(1194518556, roomId, roomtype);
 }
 
-export function GetLiveList(): $CancellablePromise<vo$0.LiveVo[] | null> {
-    return $Call.ByID(1074994888);
+export function GetLiveList(parmas: vo$0.LiveParams): $CancellablePromise<vo$0.LiveVo[] | null> {
+    return $Call.ByID(1074994888, parmas);
 }
 
 export function GetLiveRemoteInfo(roomId: string, roomtype: string): $CancellablePromise<live$0.RoomInfo | null> {

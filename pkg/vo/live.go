@@ -7,6 +7,11 @@ import (
 	"strings"
 )
 
+type LiveParams struct {
+	Type      string `json:"type"`
+	IsSpecial string `json:"isSpecial"`
+}
+
 type LiveVo struct {
 	live.RoomInfo `gorm:"-"`
 	RoomId        string `json:"roomId"`
@@ -18,8 +23,9 @@ type LiveVo struct {
 }
 
 type CreateLiveVo struct {
-	RoomId string `json:"roomId"`
-	Type   string `json:"type"`
+	RoomId    string `json:"roomId"`
+	Type      string `json:"type"`
+	IsSpecial int    `json:"isSpecial"`
 }
 
 type LiveSearchVo struct {

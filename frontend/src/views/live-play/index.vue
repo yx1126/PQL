@@ -103,11 +103,12 @@ async function onGetInfo() {
 
 function onCare(message: string, value = true) {
     msgbox.confirm(`确认要${message}吗？`).then(async () => {
-        const { roomId, type } = route.query;
+        const { roomId, type } = route.query as Record<string, string>;
         if(value) {
             await LiveService.CreateLive({
-                roomId: roomId as `${number}`,
-                type: type as string,
+                roomId: roomId,
+                type: type,
+                isSpecial: 0,
             });
         } else {
             const id = data.value?.id;

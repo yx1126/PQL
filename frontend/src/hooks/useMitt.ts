@@ -3,7 +3,10 @@ import { tryOnScopeDispose } from "@vueuse/core";
 
 type EventType = {
     "*": any;
-    "video-type": [];
+    // KeepAlive 清楚缓存
+    keepalive: [key: string | string[]];
+    // 直播页面新增房间后数据刷新
+    "live:data:refresh": [name: string];
 };
 
 const emitter = mitt<EventType>();

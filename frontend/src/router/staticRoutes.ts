@@ -1,5 +1,15 @@
 import type { RouteRecordRaw } from "vue-router";
 
+function LiveTypePage(name: string) {
+    const Live = defineAsyncComponent(() => import("@/views/home/views/live/mine.vue"));
+    return defineComponent({
+        name,
+        render() {
+            return h(Live);
+        },
+    });
+}
+
 export const staticRoutes: RouteRecordRaw[] = [
     {
         path: "/",
@@ -47,17 +57,41 @@ export const staticRoutes: RouteRecordRaw[] = [
                             keepAlive: true,
                             keepType: "live",
                         },
+                        props: { isSpecial: "1" },
                         component: () => import("@/views/home/views/live/mine.vue"),
                     },
                     {
-                        path: "competition",
-                        name: "LiveCompetition",
+                        path: "douyu",
+                        name: "LiveDouyu",
                         meta: {
                             activePath: "/home/live",
                             keepAlive: true,
                             keepType: "live",
                         },
-                        component: () => import("@/views/home/views/live/competition.vue"),
+                        props: route => route.query,
+                        component: LiveTypePage("LiveDouyu"),
+                    },
+                    {
+                        path: "huya",
+                        name: "LiveHuya",
+                        meta: {
+                            activePath: "/home/live",
+                            keepAlive: true,
+                            keepType: "live",
+                        },
+                        props: route => route.query,
+                        component: LiveTypePage("LiveHuya"),
+                    },
+                    {
+                        path: "douyin",
+                        name: "LiveDouyin",
+                        meta: {
+                            activePath: "/home/live",
+                            keepAlive: true,
+                            keepType: "live",
+                        },
+                        props: route => route.query,
+                        component: LiveTypePage("LiveDouyin"),
                     },
                     // {
                     //     path: "search",

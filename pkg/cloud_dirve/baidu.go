@@ -8,7 +8,6 @@ import (
 	"pql/pkg/request"
 	"pql/pkg/vo"
 	"strings"
-	"sync"
 	"time"
 
 	"golang.org/x/sync/singleflight"
@@ -54,7 +53,6 @@ type BaiduDrive struct {
 	http *request.Http
 	auth *service.AuthService
 
-	mu sync.RWMutex
 	sf singleflight.Group
 }
 
@@ -108,8 +106,6 @@ func (bd *BaiduDrive) GetToken() (string, error) {
 		if err != nil {
 			return "", err
 		}
-		bd.mu.Lock()
-		defer bd.mu.Unlock()
 		if err := bd.auth.SaveAuth(vo.SaveAuthVo{
 			BaseAuth: vo.BaseAuth{
 				Type:         "baidu",

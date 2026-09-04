@@ -43,8 +43,8 @@ func (ls *LiveService) OpenWeb(roomId, typee string) {
 	}
 }
 
-func (ls *LiveService) GetLiveList() []vo.LiveVo {
-	lives := ls.Live.GetLiveList()
+func (ls *LiveService) GetLiveList(parmas vo.LiveParams) []vo.LiveVo {
+	lives := ls.Live.GetLiveList(parmas)
 	if len(lives) <= 0 {
 		return lives
 	}

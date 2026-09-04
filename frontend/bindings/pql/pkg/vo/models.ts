@@ -26,6 +26,7 @@ export interface AuthVo {
 export interface CreateLiveVo {
     "roomId": string;
     "type": string;
+    "isSpecial": number;
 }
 
 export interface GameVo {
@@ -45,6 +46,11 @@ export interface GameVo {
     "id": number;
     "createdAt": types$0.Datetime;
     "updatedAt": types$0.Datetime;
+}
+
+export interface LiveParams {
+    "type": string;
+    "isSpecial": string;
 }
 
 export interface LiveSearchVo {

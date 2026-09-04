@@ -23,13 +23,19 @@ func NewLiveService(db *DB.Sqlite, ctx context.Context) *LiveService {
 	}
 }
 
-func (g *LiveService) GetLiveList() []vo.LiveVo {
+func (g *LiveService) GetLiveList(params vo.LiveParams) []vo.LiveVo {
 	var liveList = make([]vo.LiveVo, 0)
-	g.db.WithContext(g.ctx).
+	query := g.db.WithContext(g.ctx).
 		Model(&model.Live{}).
 		Select("*").
-		Order("is_special ASC, sort ASC, created_at DESC").
-		Find(&liveList)
+		Order("is_special ASC, sort ASC, created_at DESC")
+	if params.Type != "" {
+		query.Where("type = ?", params.Type)
+	}
+	if params.IsSpecial != "" {
+		query.Where("is_special = ?", params.IsSpecial)
+	}
+	query.Find(&liveList)
 	return liveList
 }
 
@@ -55,8 +61,9 @@ func (g *LiveService) CreateLive(live vo.CreateLiveVo) error {
 	result := g.db.WithContext(g.ctx).
 		Model(&model.Live{}).
 		Create(&model.Live{
-			RoomId: live.RoomId,
-			Type:   live.Type,
+			RoomId:    live.RoomId,
+			Type:      live.Type,
+			IsSpecial: live.IsSpecial,
 		})
 	return result.Error
 }

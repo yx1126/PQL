@@ -50,27 +50,10 @@ function onExport() {
 </script>
 
 <template>
-    <div class="video-btns">
+    <w-sider-actions>
         <el-button type="primary" icon="source-manage" title="源" @click="onSourceClick" />
         <el-button type="primary" icon="source-import" title="导入" @click="importDialogRef?.open()" />
         <el-button type="primary" icon="source-export" title="导出" @click="onExport" />
-    </div>
+    </w-sider-actions>
     <import-dialog ref="importDialogRef" @success="onSuccess" />
 </template>
-
-<style lang="scss" scoped>
-.video-btns {
-    min-height: 40px;
-    display: flex;
-    gap: 8px;
-    .el-button {
-        height: 35px;
-        --el-border-radius-base: var(--w-border-radius);
-        flex: 1;
-        --el-font-size-base: 22px;
-        & + .el-button {
-            margin: 0;
-        }
-    }
-}
-</style>
