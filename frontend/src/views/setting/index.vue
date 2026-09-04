@@ -6,6 +6,7 @@ defineOptions({
 });
 
 const Base = defineAsyncComponent(() => import("./components/Base.vue"));
+const Page = defineAsyncComponent(() => import("./components/Page.vue"));
 const About = defineAsyncComponent(() => import("./components/About.vue"));
 const Video = defineAsyncComponent(() => import("./components/Video.vue"));
 const CloudDrive = defineAsyncComponent(() => import("./components/CloudDrive.vue"));
@@ -22,7 +23,7 @@ const router = useRouter();
 
 const menuList: SetMenu[] = [
     { name: "通用设置", type: "base", icon: "ele-Setting", component: Base },
-    { name: "界面设置", type: "ui", icon: "ele-Monitor" },
+    { name: "界面设置", type: "ui", icon: "ele-Monitor", component: Page },
     { name: "视频设置", type: "video", icon: "ele-VideoCamera", component: Video },
     { name: "网盘设置", type: "drive", icon: "cloud-drive", component: CloudDrive },
     { name: "下载设置", type: "download", icon: "ele-Download" },

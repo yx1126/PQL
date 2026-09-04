@@ -25,8 +25,8 @@ type Setting struct {
 
 	// 直播
 	// 显示类型
-	LiveShowType        string `json:"liveShowType" gorm:"default:all"`
-	LiveSpecialShowType string `json:"liveSpecialShowType" gorm:"default:all"`
+	LiveShowType    string `json:"liveShowType" gorm:"default:all"`
+	HeaderShowTheme string `json:"headerShowTheme" gorm:"default:1"`
 
 	// 动漫
 	// 周番显示类型

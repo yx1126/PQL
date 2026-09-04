@@ -35,7 +35,7 @@ func (s *SettingService) Init() error {
 			VideoSourceType:      "",
 			AnimeSourceType:      "",
 			LiveShowType:         "default",
-			LiveSpecialShowType:  "all",
+			HeaderShowTheme:      "1",
 			AnimeWeeklyType:      "cn",
 		}
 		if err := s.db.WithContext(s.ctx).Model(&model.Setting{}).Create(&sets).Error; err != nil {
@@ -67,7 +67,7 @@ func (s *SettingService) UpdateSetting(config vo.UpdateSettingVo) error {
 			VideoSourceType:      config.VideoSourceType,
 			AnimeSourceType:      config.AnimeSourceType,
 			LiveShowType:         config.LiveShowType,
-			LiveSpecialShowType:  config.LiveSpecialShowType,
+			HeaderShowTheme:      config.HeaderShowTheme,
 			AnimeWeeklyType:      config.AnimeWeeklyType,
 		})
 	return result.Error

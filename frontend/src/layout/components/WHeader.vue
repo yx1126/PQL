@@ -8,7 +8,7 @@ defineOptions({
     name: "WindowHeader",
 });
 
-export type EventType = "message" | "setting" | "always-top" | "line" | "maxmin" | "close";
+export type EventType = "theme" | "message" | "setting" | "always-top" | "line" | "maxmin" | "close";
 
 const sourceTitle = import.meta.env.VITE_APP_TITLE_SHORT;
 const mainName = import.meta.env.VITE_APP_MAIN_NAME;
@@ -21,6 +21,16 @@ const set = useSetStore();
 const maximiseIcon = ref<"maximization" | "restore">("restore");
 
 const isAlwaysTop = ref(false);
+
+const theme = computed({
+    get: () => set.theme,
+    set: v => {
+        Events.Emit(WailsEvents.AppTheme, {
+            type: "*",
+            theme: v,
+        });
+    },
+});
 
 const title = computed(() => {
     const r = route.matched.findLast(v => v.meta.title);
@@ -76,6 +86,9 @@ onBeforeUnmount(() => {
 
 async function onClick(type: EventType) {
     switch(type) {
+    case "theme":
+        theme.value = theme.value == 0 ? 1 : 0;
+        break;
     case "message":
         router.push("/sub/message");
         break;
@@ -126,12 +139,17 @@ async function onClick(type: EventType) {
         </div>
         <div class="w-header__right">
             <template v-if="set.windownName === mainName">
-                <div class="btn" @click="onClick('message')">
-                    <Icon icon="ele-Bell" />
-                </div>
-                <div class="btn" @click="onClick('setting')">
-                    <Icon icon="ele-Setting" />
-                </div>
+                <transition-group name="fade-icon">
+                    <div key="bell" class="btn" @click="onClick('message')">
+                        <Icon icon="ele-Bell" />
+                    </div>
+                    <div v-if="set.headerShowTheme == '1' && theme != 2" key="theme" class="btn" @click="onClick('theme')">
+                        <Icon :icon="theme == 1 ? 'sun' : 'moon'" />
+                    </div>
+                    <div key="setting" class="btn" @click="onClick('setting')">
+                        <Icon icon="ele-Setting" />
+                    </div>
+                </transition-group>
                 <el-divider direction="vertical" />
             </template>
             <div class="btn" @click="onClick('always-top')">
@@ -173,6 +191,7 @@ async function onClick(type: EventType) {
     &__right {
         justify-content: flex-end;
         gap: 15px;
+        position: relative;
     }
     .logo {
         display: flex;
@@ -186,7 +205,6 @@ async function onClick(type: EventType) {
         display: inline-flex;
         justify-content: center;
         align-items: center;
-        transition: all 150ms var(--w-trans);
         font-size: 20px;
         color: var(--w-text-color);
         position: relative;
@@ -194,11 +212,30 @@ async function onClick(type: EventType) {
         &:hover {
             color: var(--el-color-primary);
         }
+        :deep(svg) {
+            transition: color 150ms var(--w-trans);
+        }
         @include when(danger) {
             &:hover {
-                color: #e74c3c;
+                color: var(--el-color-danger);
             }
         }
     }
+}
+
+.fade-icon-move,
+.fade-icon-enter-active,
+.fade-icon-leave-active {
+    transition: all 0.3s ease;
+}
+
+.fade-icon-enter-from,
+.fade-icon-leave-to {
+    opacity: 0;
+    transform: translateY(-30px);
+}
+
+.fade-icon-leave-active {
+    position: absolute;
 }
 </style>

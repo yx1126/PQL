@@ -18,7 +18,7 @@ const defaultSetting: SetState = {
     videoSourceType: "",
     animeSourceType: "",
     liveShowType: "default",
-    liveSpecialShowType: "all",
+    headerShowTheme: "1",
     animeWeeklyType: "cn",
 };
 
@@ -45,7 +45,7 @@ export const useSetStore = defineStore("setting", () => {
         state.colorTheme,
         state.videoSourceType,
         state.liveShowType,
-        state.liveSpecialShowType,
+        state.headerShowTheme,
         state.animeWeeklyType,
     ], async () => {
         // 主窗口更改
@@ -84,7 +84,7 @@ export const useSetStore = defineStore("setting", () => {
         state.videoDetailGrid = res.videoDetailGrid;
         state.videoDetailSort = res.videoDetailSort;
         state.liveShowType = res.liveShowType;
-        state.liveSpecialShowType = res.liveSpecialShowType;
+        state.headerShowTheme = res.headerShowTheme;
         state.animeWeeklyType = res.animeWeeklyType;
         state.colorTheme = res.colorTheme;
         const store = useParserStore();

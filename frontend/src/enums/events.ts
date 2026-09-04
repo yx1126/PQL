@@ -1,4 +1,4 @@
-export enum WailsEvents {
+export const enum WailsEvents {
     // window
     WindowMaximise = "window:maximise",
     WindowUnMaximise = "window:unMaximise",

@@ -120,7 +120,7 @@ export interface SettingVo {
     "videoSourceType": string;
     "animeSourceType": string;
     "liveShowType": string;
-    "liveSpecialShowType": string;
+    "headerShowTheme": string;
     "animeWeeklyType": string;
     "id": number;
     "createdAt": types$0.Datetime;
@@ -165,7 +165,7 @@ export interface UpdateSettingVo {
     "videoSourceType": string;
     "animeSourceType": string;
     "liveShowType": string;
-    "liveSpecialShowType": string;
+    "headerShowTheme": string;
     "animeWeeklyType": string;
     "id": number;
 }

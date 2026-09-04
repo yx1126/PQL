@@ -13,7 +13,7 @@ type BaseSettingVo struct {
 	VideoSourceType      string `json:"videoSourceType"`
 	AnimeSourceType      string `json:"animeSourceType"`
 	LiveShowType         string `json:"liveShowType"`
-	LiveSpecialShowType  string `json:"liveSpecialShowType"`
+	HeaderShowTheme      string `json:"headerShowTheme"`
 	AnimeWeeklyType      string `json:"animeWeeklyType"`
 }
 
