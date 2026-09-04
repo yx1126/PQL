@@ -18,9 +18,11 @@ declare module "vue" {
         Icon: typeof import("../src/components/GlobalRegister/Icon/Icon.vue")["default"];
         Pagination: typeof import("element-plus")["ElPagination"];
         // w-ui
-        WSiderMenu: typeof import("../src/components/WUI/components/WSiderMenu.vue")["default"];
-        WSiderLayout: typeof import("../src/components/WUI/components/WSiderLayout.vue")["default"];
-        WPlayerLayout: typeof import("../src/components/WUI/components/WPlayerLayout.vue")["default"];
+        WSiderMenu: typeof import("../src/components/WUI/layout/WSiderMenu.vue")["default"];
+        WSiderLayout: typeof import("../src/components/WUI/layout/WSiderLayout.vue")["default"];
+        WPlayerLayout: typeof import("../src/components/WUI/layout/WPlayerLayout.vue")["default"];
+        WSiderActions: typeof import("../src/components/WUI/layout/WSiderActions.vue")["default"];
+
         WBacktop: typeof import("../src/components/WUI/components/WBacktop.vue")["default"];
         WButton: typeof import("../src/components/WUI/components/WButton.vue")["default"];
         WImage: typeof import("../src/components/WUI/components/WImage.vue")["default"];

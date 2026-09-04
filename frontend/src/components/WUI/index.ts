@@ -1,9 +1,10 @@
 import { withInstall } from "@/utils/withInstall";
 
 // layout
-import WSiderMenu, { type MenuSiderItem } from "./components/WSiderMenu.vue";
-import WSiderLayout from "./components/WSiderLayout.vue";
-import WPlayerLayout from "./components/WPlayerLayout.vue";
+import WSiderMenu, { type MenuSiderItem } from "./layout/WSiderMenu.vue";
+import WSiderLayout from "./layout/WSiderLayout.vue";
+import WPlayerLayout from "./layout/WPlayerLayout.vue";
+import WSiderActions from "./layout/WSiderActions.vue";
 
 // basic
 import WButton from "./components/WButton.vue";
@@ -24,6 +25,7 @@ export default withInstall(app => {
         WSiderMenu,
         WSiderLayout,
         WPlayerLayout,
+        WSiderActions,
         WButton,
         WVideo,
         WBacktop,

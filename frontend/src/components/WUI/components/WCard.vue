@@ -76,7 +76,7 @@ const slots = defineSlots<{
         /* 关键换行 */
         word-break: break-all;
         overflow-wrap: break-word;
-        white-space: normal;
+        white-space: pre-wrap;
     }
     @include when(hover) {
         .w-card__desc:hover {

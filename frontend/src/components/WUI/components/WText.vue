@@ -3,10 +3,12 @@ import WImage from "./WImage.vue";
 import { parseUnit } from "@/utils/unit";
 import type { PropType, SlotsType, VNode } from "vue";
 
+export type WTextIconType = "icon" | "img";
+
 export default defineComponent({
     name: "WText",
     props: {
-        type: { type: String as PropType<"icon" | "img">, default: "icon" },
+        type: { type: String as PropType<WTextIconType>, default: "icon" },
         icon: { type: String },
         size: { type: [String, Number] as PropType<Unit>, default: 16 },
         gap: { type: [String, Number] as PropType<Unit> },
@@ -23,7 +25,7 @@ export default defineComponent({
             case "icon":
                 return <icon class="w-text__icon" icon={ic} />;
             case "img":
-                return <WImage class="w-text__icon" src={ic} />;
+                return <WImage class="w-text__img" src={ic} />;
             default:
                 return null;
             }

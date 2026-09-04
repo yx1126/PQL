@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import WText, { type WTextIconType } from "../components/WText.vue";
+
 defineOptions({
     name: "WSiderMenu",
 });
@@ -14,9 +16,10 @@ const {
 const router = useRouter();
 
 export interface MenuSiderItem {
-    id?: string | number;
+    id: string | number;
     label?: string;
     icon?: string;
+    type?: WTextIconType;
     path?: string;
     size?: Unit;
     disabled?: boolean;
@@ -43,8 +46,9 @@ function onMenuClick(menu: MenuSiderItem) {
                 }"
                 @click="onMenuClick(menu)"
             >
-                <Icon v-if="menu.icon" :icon="menu.icon" :size="menu.size" />
-                <span>{{ menu.label }}</span>
+                <!-- <Icon v-if="menu.icon" :icon="menu.icon" :size="menu.size" />
+                    <span>{{ menu.label }}</span> -->
+                <w-text :type="menu.type" :icon="menu.icon" :size="menu.size">{{ menu.label }}</w-text>
             </div>
         </template>
     </div>
