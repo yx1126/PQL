@@ -7,9 +7,9 @@ export function useLoading() {
         loadCount.value = 0;
     });
 
-    onDeactivated(() => {
-        loadCount.value = 0;
-    });
+    // onDeactivated(() => {
+    //     loadCount.value = 0;
+    // });
 
     function setLoad(value = true) {
         if(value) {

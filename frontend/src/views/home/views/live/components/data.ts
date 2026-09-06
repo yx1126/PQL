@@ -24,3 +24,16 @@ export const menuList: MenuSiderItem[] = [
     // { id: 1, label: "赛事", icon: "competition", path: "/home/live/competition" },
     // { id: 1, label: "搜索", icon: "ele-Search", path: "/home/live/search" },
 ];
+
+export function getNameByType(type: string) {
+    switch(type) {
+    case "1":
+        return "LiveDouyu";
+    case "2":
+        return "LiveHuya";
+    case "3":
+        return "LiveDouyin";
+    default:
+        return "";
+    }
+}

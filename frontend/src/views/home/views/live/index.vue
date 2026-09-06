@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import KeepRouteView from "@/components/KeepRouteView";
-import { menuList } from "./components/data";
+import { getNameByType, menuList } from "./components/data";
 import type { CreateLiveVo } from "@bind/vo/models";
 
 defineOptions({
@@ -20,23 +20,18 @@ function onSuccess(data: CreateLiveVo) {
     const rtype = route.query.type || "";
     const keys: string[] = [];
     // 非关注页面添加直播间选中关注 移除缓存
-    if(["LiveMine"].includes(n)) {
-        if(data.isSpecial === 1) livelistener.emit("LiveMine");
-    } else if(["LiveDouyu", "LiveHuya", "LiveDouyin"].includes(n)) {
-        if(rtype === data.type) livelistener.emit(n);
-        if(data.isSpecial === 1) keys.push("LiveMine");
-        // 平台页面
-        switch(data.type) {
-        case "1":
-            rtype != "1" && keys.push("LiveDouyu");
-            break;
-        case "2":
-            rtype != "2" && keys.push("LiveHuya");
-            break;
-        case "3":
-            rtype != "3" && keys.push("LiveDouyin");
-            break;
+    if(n === "LiveMine") {
+        if(data.isSpecial === 1) {
+            livelistener.emit("LiveMine");
         }
+        keys.push(getNameByType(data.type));
+    } else {
+        if(rtype === data.type) {
+            livelistener.emit(n);
+        } else {
+            keys.push(getNameByType(data.type));
+        }
+        if(data.isSpecial === 1) keys.push("LiveMine");
     }
     keepalive.emit(keys);
 }

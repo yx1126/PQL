@@ -5,6 +5,7 @@ import { openURL, windowOpen } from "@/utils/window";
 import { renderIcon } from "@/utils/renderIcon";
 import { Clipboard } from "@wailsio/runtime";
 import { toString } from "@/utils/validata";
+import { getNameByType } from "./components/data";
 import type { LiveVo } from "@bind/vo";
 
 defineOptions({
@@ -84,6 +85,17 @@ function onLiveClick(live: LiveVo) {
     });
 }
 
+function onSendUpdate(type: string) {
+    const keys: string[] = [];
+    if(route.name == "LiveMine") {
+        keys.push(getNameByType(type));
+    } else {
+        // 移除关注页缓存
+        keys.push("LiveMine");
+    }
+    keepalive.emit(keys);
+}
+
 async function onCommand(type: string, data: LiveVo) {
     if(type === "special" || type === "no-special") {
         const isSpecial = type === "special" ? 1 : 0;
@@ -92,14 +104,19 @@ async function onCommand(type: string, data: LiveVo) {
             sort: null,
             isSpecial,
         });
-        keepalive.emit("LiveMine");
-        data.isSpecial = isSpecial;
+        onSendUpdate(data.type);
+        if(route.name == "LiveMine") {
+            query();
+        } else {
+            data.isSpecial = isSpecial;
+        }
         return;
     }
     if(type === "care") {
         msgBox.confirm("确认要删除吗？").then(async () => {
             if(data?.id) await LiveService.DeleteLive([data.id]);
             query();
+            onSendUpdate(data.type);
         });
         return;
     }
