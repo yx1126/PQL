@@ -13,42 +13,37 @@ const contentRef = useTemplateRef("contentRef");
 
 const overflow = ref(false);
 const isExpanded = ref(false);
-const scrollHeight = ref(0);
 
-let resizeObserver: ResizeObserver | null = null;
+useWindowResize(onCheckOverflow);
 
-onMounted(() => {
-    onCheckOverflow();
-    let lastWidth = 0;
-    if(contentRef.value) {
-        resizeObserver = new ResizeObserver(entries => {
-            const width = entries[0]?.contentRect.width ?? 0;
-            // 只处理宽度变化
-            if(Math.abs(width - lastWidth) < 1) return;
-            lastWidth = width;
-            onCheckOverflow();
-        });
-        resizeObserver.observe(contentRef.value);
-    }
-});
+onMounted(onCheckOverflow);
 
-onBeforeUnmount(() => {
-    resizeObserver?.disconnect();
-});
+onActivated(onCheckOverflow);
 
 function onShowMore() {
     isExpanded.value = !isExpanded.value;
 }
 
 async function onCheckOverflow() {
-    if(isExpanded.value) return;
     await nextTick();
-
     const el = contentRef.value;
     if(!el) return;
-    const height = parseFloat(getComputedStyle(el).height);
-    scrollHeight.value = el.scrollHeight;
-    overflow.value = el.scrollHeight > height + 2;
+    let sum = 0;
+    let isShow = false;
+    const w = parseFloat(getComputedStyle(el).width);
+    for(let index = 0; index < el.childNodes.length; index++) {
+        const child = el.childNodes[index];
+        if(child instanceof Element) {
+            sum += parseFloat(getComputedStyle(child)?.width);
+            if(sum > w) {
+                isShow = true;
+                break;
+            }
+        } else {
+            continue;
+        }
+    }
+    overflow.value = isShow;
 }
 </script>
 
@@ -60,7 +55,6 @@ async function onCheckOverflow() {
         }"
         :style="{
             '--video-item-height': parseUnit(height),
-            '--video-item-scroll-height': scrollHeight + 'px',
         }"
     >
         <div ref="contentRef" class="video-item__body">
@@ -92,14 +86,13 @@ async function onCheckOverflow() {
         height: var(--video-item-height);
         gap: 8px 2px;
         overflow: hidden;
-        transition: height 0.2s var(--w-trans);
     }
     &__more {
         align-self: flex-start;
     }
     @include when(expand) {
         .video-item__body {
-            height: var(--video-item-scroll-height);
+            height: max-content;
         }
     }
 }
