@@ -54,7 +54,8 @@ function onCommand(type: string, data: RoomInfo) {
             try {
                 await LiveService.CreateLive({
                     type: "1",
-                    roomId: toString(data.roomId) as `${number}`,
+                    roomId: data.roomId,
+                    isSpecial: 0,
                 });
             } catch (error) {
                 message.error((error as any)?.message || "未知错误！");

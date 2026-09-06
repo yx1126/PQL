@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="T extends object">
 import jp, { type Parse, type RuleItem } from "@/utils/parse";
+import VideoItem from "./VideoItem.vue";
 
 defineOptions({
     name: "VideoType",
@@ -29,7 +30,7 @@ function onClick(item: unknown, primary?: string) {
             :key="jp.value(item, config?.primaryPath) || index"
         >
             <el-divider v-if="index !== 0" class="!m-0" />
-            <div class="flex flex-wrap gap-[8px_2px] leading-none">
+            <video-item height="26">
                 <template
                     v-for="sub, i in jp.value(item, config?.childrenPath)"
                     :key="jp.value(sub, config?.childPrimaryPath) || i"
@@ -42,7 +43,7 @@ function onClick(item: unknown, primary?: string) {
                         {{ jp.value(sub, config?.childNamePath) }}
                     </w-button>
                 </template>
-            </div>
+            </video-item>
         </template>
     </div>
 </template>
