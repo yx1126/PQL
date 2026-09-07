@@ -49,6 +49,10 @@ function onUnBind(item: AuthVo) {
         query();
     });
 }
+
+function onFormatPercentage(item: AuthVo) {
+    return () => `${item.used.toFixed(2)}G/${item.total}G`;
+}
 </script>
 
 <template>
@@ -68,6 +72,15 @@ function onUnBind(item: AuthVo) {
                         <span>{{ item.nickname }}（{{ item.username }}）</span>
                     </div>
                     <span>{{ getBaiduVip(item.vip_type) }}</span>
+                </div>
+                <div class="flex items-center justify-between mt-[var(--w-layout-space)]">
+                    <div class="w-[300px]">
+                        <el-progress v-if="item.total > 0" :percentage="item.used / item.total * 100" :format="onFormatPercentage(item)" />
+                    </div>
+                    <div>
+                        <el-button type="primary" plain>同步</el-button>
+                        <el-button type="primary" plain>上传</el-button>
+                    </div>
                 </div>
             </w-card>
         </template>

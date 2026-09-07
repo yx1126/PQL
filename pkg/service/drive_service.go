@@ -70,8 +70,9 @@ func (s *DriveService) GetAuthList() ([]vo.AuthVo, error) {
 	var errs []error
 	var wg sync.WaitGroup
 	for i, v := range res {
+		isBaidu := v.IsAuth() && v.Type == "baidu"
 		wg.Go(func() {
-			if v.IsAuth() && v.Type == "baidu" {
+			if isBaidu {
 				bd, err := s.baidu.GetInfo()
 				if err != nil {
 					errs = append(errs, err)
@@ -81,6 +82,19 @@ func (s *DriveService) GetAuthList() ([]vo.AuthVo, error) {
 					res[i].Username = bd.BaiduName
 					res[i].Nickname = bd.NetdiskName
 					res[i].VipType = bd.VipType
+				}
+			}
+		})
+		wg.Go(func() {
+			if isBaidu {
+				bd, err := s.baidu.GetQuota()
+				if err != nil {
+					errs = append(errs, err)
+				} else {
+					// B转GB
+					g := float64(1024 * 1024 * 1024)
+					res[i].Total = float64(bd.Total) / g
+					res[i].Used = float64(bd.Used) / g
 				}
 			}
 		})

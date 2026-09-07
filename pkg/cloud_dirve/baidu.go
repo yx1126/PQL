@@ -49,9 +49,16 @@ type BaiduUserInfo struct {
 	VipType     int    `json:"vip_type"`
 }
 
+type BaiduQuota struct {
+	BaiduBaseRes
+	Total int `json:"total"`
+	Used  int `json:"used"`
+}
+
 type BaiduDrive struct {
 	http *request.Http
 	auth *service.AuthService
+	path string
 
 	sf singleflight.Group
 }
@@ -60,6 +67,7 @@ func NewBaidu(http *request.Http, auth *service.AuthService) *BaiduDrive {
 	result := &BaiduDrive{
 		http: http,
 		auth: auth,
+		path: "/apps/PQL",
 	}
 	return result
 }
@@ -124,6 +132,60 @@ func (bd *BaiduDrive) GetToken() (string, error) {
 		return "", err
 	}
 	return v.(string), nil
+}
+
+func (bd *BaiduDrive) GetQuota() (*BaiduQuota, error) {
+	baidu, err := bd.auth.GetAuth("baidu")
+	if err != nil {
+		return nil, err
+	}
+	r := bd.http.R()
+
+	r.SetQueryParams(map[string]string{
+		"access_token": baidu.Token,
+	})
+
+	resp, err := r.Get("https://pan.baidu.com/api/quota")
+	if err != nil {
+		return nil, err
+	}
+	var result BaiduQuota
+	if err := json.Unmarshal(resp.Bytes(), &result); err != nil {
+		return nil, err
+	}
+	if result.Errno != 0 {
+		return nil, errors.New(result.Errmsg)
+	}
+	return &result, nil
+}
+
+func (bd *BaiduDrive) DataSync() error {
+	baidu, err := bd.auth.GetAuth("baidu")
+	if err != nil {
+		return err
+	}
+	r := bd.http.R()
+	r.SetQueryParams(map[string]string{
+		"method":       "create",
+		"access_token": baidu.Token,
+	})
+	r.SetFormData(map[string]string{
+		"path":  bd.path,
+		"isdir": "1",
+	})
+	resp, err := r.Post("https://pan.baidu.com/rest/2.0/xpan/file")
+	if err != nil {
+		return err
+	}
+	var result BaiduQuota
+	if err := json.Unmarshal(resp.Bytes(), &result); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (bd *BaiduDrive) DataUpload() {
+
 }
 
 // 轮询获取token

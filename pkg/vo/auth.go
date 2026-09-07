@@ -23,6 +23,8 @@ type AuthVo struct {
 	Username string `json:"username" gorm:"-"`
 	Nickname string `json:"nickname" gorm:"-"`
 	VipType  int    `json:"vip_type" gorm:"-"`
+	Total    float64    `json:"total" gorm:"-"`
+	Used     float64    `json:"used" gorm:"-"`
 	model.BaseModel
 }
 
