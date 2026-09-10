@@ -19,6 +19,11 @@ const { data, query } = useService({
     isLayoutLoad: true,
 });
 
+const { loading, query: onDataUpload } = useService({
+    request: DriveService.DataUpload,
+    default: null,
+});
+
 function getBaiduVip(value: number) {
     switch(value) {
     case 0:
@@ -79,7 +84,7 @@ function onFormatPercentage(item: AuthVo) {
                     </div>
                     <div>
                         <el-button type="primary" plain>同步</el-button>
-                        <el-button type="primary" plain>上传</el-button>
+                        <el-button type="primary" plain :loading @click="onDataUpload">上传</el-button>
                     </div>
                 </div>
             </w-card>

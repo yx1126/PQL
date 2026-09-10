@@ -6,6 +6,7 @@ import (
 	"errors"
 	"net/url"
 	clouddirve "pql/pkg/cloud_dirve"
+	"pql/pkg/utils/tool"
 	"pql/pkg/vo"
 	"sync"
 	"time"
@@ -146,4 +147,9 @@ func (s *DriveService) RefreshBaiduToken(refreshToken string) (*clouddirve.Baidu
 
 func (s *DriveService) UnBindBaidu(typee string) error {
 	return s.Auth.DeleteAuth(typee)
+}
+
+func (s *DriveService) DataUpload() error {
+	dir := tool.Flag(s.App.Env.Info().Debug, "bin/.PQL/dbs", ".PQL/dbs")
+	return s.baidu.DataUpload(dir + "/PQL.db")
 }

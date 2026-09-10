@@ -16,6 +16,10 @@ export function Close(): $CancellablePromise<void> {
     return $Call.ByID(680995866);
 }
 
+export function DataUpload(): $CancellablePromise<void> {
+    return $Call.ByID(687521699);
+}
+
 export function GetAuthList(): $CancellablePromise<vo$0.AuthVo[] | null> {
     return $Call.ByID(2223579352);
 }

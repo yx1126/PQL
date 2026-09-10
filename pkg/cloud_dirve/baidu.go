@@ -55,6 +55,13 @@ type BaiduQuota struct {
 	Used  int `json:"used"`
 }
 
+type BaiduServers struct {
+	BaiduBaseRes
+	Servers []struct {
+		Server string `json:"server"`
+	} `json:"servers"`
+}
+
 type BaiduDrive struct {
 	http *request.Http
 	auth *service.AuthService
@@ -159,15 +166,11 @@ func (bd *BaiduDrive) GetQuota() (*BaiduQuota, error) {
 	return &result, nil
 }
 
-func (bd *BaiduDrive) DataSync() error {
-	baidu, err := bd.auth.GetAuth("baidu")
-	if err != nil {
-		return err
-	}
+func (bd *BaiduDrive) validDir(token string) error {
 	r := bd.http.R()
 	r.SetQueryParams(map[string]string{
 		"method":       "create",
-		"access_token": baidu.Token,
+		"access_token": token,
 	})
 	r.SetFormData(map[string]string{
 		"path":  bd.path,
@@ -177,15 +180,116 @@ func (bd *BaiduDrive) DataSync() error {
 	if err != nil {
 		return err
 	}
-	var result BaiduQuota
+	var result BaiduBaseRes
 	if err := json.Unmarshal(resp.Bytes(), &result); err != nil {
 		return err
+	}
+	if result.Errno != 0 && result.Errno != -8 {
+		return errors.New(result.Errmsg)
 	}
 	return nil
 }
 
-func (bd *BaiduDrive) DataUpload() {
+func (bd *BaiduDrive) DataSync(data map[string]any) error {
 
+	return nil
+}
+
+func (bd *BaiduDrive) PreUpload(path string) (string, error) {
+	baidu, err := bd.auth.GetAuth("baidu")
+	if err != nil {
+		return "", err
+	}
+	r := bd.http.R()
+
+	r.SetQueryParams(map[string]string{
+		"method":         "precreate",
+		"access_token":   baidu.Token,
+		"appid":          "250528",
+		"path":           path,
+		"uploadid":       "P1-MTAuMjI4LjQzLjMxOjE1OTU4NTg==",
+		"upload_version": "2.0",
+	})
+	resp, err := r.Post("https://pan.baidu.com/rest/2.0/pcs/file")
+
+	var result BaiduServers
+	if err := json.Unmarshal(resp.Bytes(), &result); err != nil {
+		return "", err
+	}
+	if result.Errno != 0 {
+		return "", errors.New(result.Errmsg)
+	}
+	if len(result.Servers) <= 0 {
+		return "", nil
+	}
+	return result.Servers[0].Server, nil
+}
+
+func (bd *BaiduDrive) getUploadHost(path string) (string, error) {
+	baidu, err := bd.auth.GetAuth("baidu")
+	if err != nil {
+		return "", err
+	}
+	r := bd.http.R()
+
+	r.SetQueryParams(map[string]string{
+		"method":         "locateupload",
+		"appid":          "250528",
+		"access_token":   baidu.Token,
+		"path":           path,
+		"uploadid":       "P1-MTAuMjI4LjQzLjMxOjE1OTU4NTg==",
+		"upload_version": "2.0",
+	})
+	resp, err := r.Post("https://pan.baidu.com/rest/2.0/pcs/file")
+
+	var result BaiduServers
+	if err := json.Unmarshal(resp.Bytes(), &result); err != nil {
+		return "", err
+	}
+	if result.Errno != 0 {
+		return "", errors.New(result.Errmsg)
+	}
+	if len(result.Servers) <= 0 {
+		return "", nil
+	}
+	return result.Servers[0].Server, nil
+}
+
+func (bd *BaiduDrive) DataUpload(path string) error {
+	// server, err := bd.getUploadHost(path)
+	// if err != nil {
+	// 	return err
+	// }
+	baidu, err := bd.auth.GetAuth("baidu")
+	if err != nil {
+		return err
+	}
+	// 校验文件夹
+	if err := bd.validDir(baidu.Token); err != nil {
+		return err
+	}
+
+	r := bd.http.R()
+
+	r.SetQueryParams(map[string]string{
+		"method":       "string",
+		"access_token": baidu.Token,
+		"path":         bd.path + "PQL.db",
+		"ondup":        "overwrite",
+	})
+	r.SetFile("file", path)
+	resp, err := r.Post("https://pan.baidu.com/rest/2.0/pcs/file")
+	if err != nil {
+		return err
+	}
+	var result BaiduBaseRes
+	if err := json.Unmarshal(resp.Bytes(), &result); err != nil {
+		return err
+	}
+	if result.Errno != 0 {
+		return errors.New(result.Errmsg)
+	}
+	return nil
 }
 
 // 轮询获取token
