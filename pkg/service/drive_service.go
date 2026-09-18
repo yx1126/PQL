@@ -11,6 +11,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/baidu-netdisk/baidu-drive-sdk-go/baidudriver/api"
+	"github.com/baidu-netdisk/baidu-drive-sdk-go/baidudriver/scene"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
@@ -67,35 +69,44 @@ func (s *DriveService) StartBaiduAuth() (*clouddirve.BaiduDeviceRes, error) {
 }
 
 func (s *DriveService) GetAuthList() ([]vo.AuthVo, error) {
+	token, err := s.baidu.GetToken()
+	if err != nil {
+		return nil, err
+	}
 	res := s.Auth.GetAuthListist()
+
+	ctx := s.App.Context()
+	client := api.NewClient(api.WithAccessToken(token))
+	sc := scene.New(client)
+
 	var errs []error
 	var wg sync.WaitGroup
 	for i, v := range res {
 		isBaidu := v.IsAuth() && v.Type == "baidu"
 		wg.Go(func() {
 			if isBaidu {
-				bd, err := s.baidu.GetInfo()
+				user, err := sc.UserInfo(ctx)
 				if err != nil {
 					errs = append(errs, err)
 				} else {
-					res[i].Avatar = bd.AvatarUrl
-					res[i].DriveId = bd.Uk
-					res[i].Username = bd.BaiduName
-					res[i].Nickname = bd.NetdiskName
-					res[i].VipType = bd.VipType
+					res[i].Avatar = user.AvatarURL
+					res[i].DriveId = user.UK
+					res[i].Username = user.BaiduName
+					res[i].Nickname = user.NetdiskName
+					res[i].VipType = user.VipType
 				}
 			}
 		})
 		wg.Go(func() {
 			if isBaidu {
-				bd, err := s.baidu.GetQuota()
+				quota, _ := client.Nas.Quota(ctx, nil)
 				if err != nil {
 					errs = append(errs, err)
 				} else {
 					// B转GB
 					g := float64(1024 * 1024 * 1024)
-					res[i].Total = float64(bd.Total) / g
-					res[i].Used = float64(bd.Used) / g
+					res[i].Total = float64(quota.Total) / g
+					res[i].Used = float64(quota.Used) / g
 				}
 			}
 		})
@@ -150,6 +161,19 @@ func (s *DriveService) UnBindBaidu(typee string) error {
 }
 
 func (s *DriveService) DataUpload() error {
+	token, err := s.baidu.GetToken()
+	if err != nil {
+		return err
+	}
+	client := api.NewClient(api.WithAccessToken(token))
+	sc := scene.New(client)
 	dir := tool.Flag(s.App.Env.Info().Debug, "bin/.PQL/dbs", ".PQL/dbs")
-	return s.baidu.DataUpload(dir + "/PQL.db")
+	if _, err := sc.UploadFile(s.App.Context(), &scene.UploadFileParams{
+		LocalPath:  dir + "/PQL.db",
+		RemotePath: "/apps/PQL/PQL.db",
+		RType:      api.Ptr(3),
+	}); err != nil {
+		return err
+	}
+	return nil
 }

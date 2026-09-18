@@ -55,6 +55,13 @@ function onUnBind(item: AuthVo) {
     });
 }
 
+function onUpload() {
+    msgbox.confirm("确认要上传数据吗？").then(async () => {
+        await onDataUpload();
+        message.success("上传成功！");
+    });
+}
+
 function onFormatPercentage(item: AuthVo) {
     return () => `${item.used.toFixed(2)}G/${item.total}G`;
 }
@@ -84,7 +91,7 @@ function onFormatPercentage(item: AuthVo) {
                     </div>
                     <div>
                         <el-button type="primary" plain>同步</el-button>
-                        <el-button type="primary" plain :loading @click="onDataUpload">上传</el-button>
+                        <el-button type="primary" plain :loading @click="onUpload">上传</el-button>
                     </div>
                 </div>
             </w-card>

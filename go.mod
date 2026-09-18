@@ -3,6 +3,7 @@ module pql
 go 1.26.2
 
 require (
+	github.com/baidu-netdisk/baidu-drive-sdk-go v0.1.0
 	github.com/chromedp/cdproto v0.0.0-20260804232424-e85f50dbfd32
 	github.com/chromedp/chromedp v0.16.0
 	github.com/dop251/goja v0.0.0-20260901132549-43234fa61381
@@ -17,7 +18,6 @@ require (
 
 require (
 	github.com/adrg/xdg v0.5.3 // indirect
-	github.com/baidu-netdisk/baidu-drive-sdk-go v0.1.0 // indirect
 	github.com/chromedp/sysutil v1.1.0 // indirect
 	github.com/coder/websocket v1.8.14 // indirect
 	github.com/dlclark/regexp2/v2 v2.5.2 // indirect

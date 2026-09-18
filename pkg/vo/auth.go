@@ -18,13 +18,13 @@ type BaseAuth struct {
 
 type AuthVo struct {
 	BaseAuth
-	DriveId  int    `json:"id" gorm:"-"`
-	Avatar   string `json:"avatar" gorm:"-"`
-	Username string `json:"username" gorm:"-"`
-	Nickname string `json:"nickname" gorm:"-"`
-	VipType  int    `json:"vip_type" gorm:"-"`
-	Total    float64    `json:"total" gorm:"-"`
-	Used     float64    `json:"used" gorm:"-"`
+	DriveId  int64   `json:"id" gorm:"-"`
+	Avatar   string  `json:"avatar" gorm:"-"`
+	Username string  `json:"username" gorm:"-"`
+	Nickname string  `json:"nickname" gorm:"-"`
+	VipType  int     `json:"vip_type" gorm:"-"`
+	Total    float64 `json:"total" gorm:"-"`
+	Used     float64 `json:"used" gorm:"-"`
 	model.BaseModel
 }
 
